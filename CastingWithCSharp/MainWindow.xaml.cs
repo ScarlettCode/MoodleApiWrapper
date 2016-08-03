@@ -12,7 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using SharpCast;
+using RestSharp;
+using RestSharp.Authenticators;
+using MoodleApiWrapper;
 
 namespace CastingWithCSharp
 {
@@ -24,8 +26,26 @@ namespace CastingWithCSharp
         public MainWindow()
         {
             InitializeComponent();
-            var devices = DeviceLocator
-       
+
+             //ApiWrapper.ApiToken = "dabe95abf7e2bdf5a9633a2de16b4ac2";
+            //ApiWrapper.ApiToken = "dabe95abf7e2bdf5a9633aac2";
+            ApiWrapper.Host = new Uri("http://detussenschool.nl/elo/");
+            
+
+
+            dostuff();
         }
+
+        public async void dostuff()
+        {
+            var token = await ApiWrapper.GetApiToken("tm", "MK3$tpthggguhdwu", "services");
+           
+            var stuffisdone = "";
+        }
+   
+        
+
     }
+
+
 }
