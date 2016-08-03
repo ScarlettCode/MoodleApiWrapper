@@ -3,17 +3,22 @@ Moodle Api Wrapper for C#
 
 #Usage 
 
-   public async void DoSomething()
-        {
-            // Set your host 
-            ApiWrapper.Host = new Uri("https://yourhost.example.com/");
 
-            // request your token
-            var token = await ApiWrapper.GetApiToken("username", "password", "services");
+async void DoSomething()
+{
+   // Set your host 
+   ApiWrapper.Host = new Uri("https://yourhost.example.com/");
 
-            //set your token
-            ApiWrapper.ApiToken = token.Data.token;
+   // request your token
+   var token = await ApiWrapper.GetApiToken("username", "password", "services");
 
-            //make a call
-            var result = await ApiWrapper.UpdateUser(1, username: "SuperAwesomeName");
-        }
+   //set your token
+   ApiWrapper.ApiToken = token.Data.token;
+
+   //make a call
+   var result = await ApiWrapper.UpdateUser(1, username: "SuperAwesomeName");
+}
+
+   
+   
+   
