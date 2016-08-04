@@ -14,6 +14,7 @@ namespace MoodleApiWrapper
     public class ApiWrapper
     {
 
+
         #region Properties
 
         /// <summary>
@@ -129,9 +130,9 @@ namespace MoodleApiWrapper
 
         #endregion
 
-
         #region functions
 
+        #region Authentications
         /// <summary>
         /// Returns your Api Token needed to make any calls
         /// <para />
@@ -162,8 +163,9 @@ namespace MoodleApiWrapper
                 throw new Exception("Host is not set");
             }
         }
+#endregion
 
-
+        #region System actions
         /// <summary>
         /// This API will return information about the site, web services users, and authorized API actions. This call is useful for getting site information and the capabilities of the web service user. 
         /// </summary>
@@ -200,7 +202,9 @@ namespace MoodleApiWrapper
                     throw new Exception("Token is not set");
             }
         }
+        #endregion
 
+        #region User Actions 
         /// <summary>
         /// Search for users matching the parameters of the call. This call will return matching user accounts with profile fields.
         ///  The key/value pairs to be considered in user search. Values can not be empty. Specify different keys only once
@@ -596,11 +600,11 @@ namespace MoodleApiWrapper
                     $"wstoken={ApiToken}&" +
                     $"wsfunction={ParseMethod(Methods.core_role_unassign_roles)}&" +
                     $"moodlewsrestformat={ParseFormat(Format.JSON)}&" +
-                    $"assignments[0][roleid]={role_id}&" +
-                    $"assignments[0][userid]={user_id}");
-                if (context_id.Any()) query.Append($"&assignments[0][contextid]={context_id}");
-                if (context_level.Any()) query.Append($"&assignments[0][contextlevel]={context_level}");
-                if (instance_id != Int32.MinValue) query.Append($"&assignments[0][instanceid]={instance_id}");
+                    $"unassignments[0][roleid]={role_id}&" +
+                    $"unassignments[0][userid]={user_id}");
+                if (context_id.Any()) query.Append($"&unassignments[0][contextid]={context_id}");
+                if (context_level.Any()) query.Append($"&unassignments[0][contextlevel]={context_level}");
+                if (instance_id != Int32.MinValue) query.Append($"&unassignments[0][instanceid]={instance_id}");
 
                 return Get<Success>(Host.AbsoluteUri + query);
             }
@@ -613,9 +617,46 @@ namespace MoodleApiWrapper
                 else
                     throw new Exception("Token is not set");
             }
-
         }
 
+        #endregion
+
+        #region Cource Enrollment Actions
+
+        public static Task<ApiResponse<Success>> EnrolUsers(int role_id, int user_id, int cource_id,
+                                                            int timestart = Int32.MinValue, int timeend = Int32.MinValue, int suspend = Int32.MinValue)
+        {
+            if (HostIsSet && TokenIsSet)
+            {
+                StringBuilder query = new StringBuilder();
+                query.Append(
+                    "webservice/rest/server.php?" +
+                    $"wstoken={ApiToken}&" +
+                    $"wsfunction={ParseMethod(Methods.enrol_manual_enrol_users)}&" +
+                    $"moodlewsrestformat={ParseFormat(Format.JSON)}&" +
+                    $"enrolments[0][roleid]={role_id}&" +
+                    $"enrolments[0][userid]={user_id}&" + 
+                    $"enrolments[0][courceid]={cource_id}");
+                if (timestart != Int32.MinValue) query.Append($"&enrolments[0][timestart]={timestart}");
+                if (timeend != Int32.MinValue) query.Append($"&enrolments[0][timeend]={timeend}");
+                if (suspend != Int32.MinValue) query.Append($"&enrolments[0][suspend]={suspend}");
+
+                return Get<Success>(Host.AbsoluteUri + query);
+            }
+            else
+            {
+                if (!HostIsSet && TokenIsSet)
+                    throw new Exception("Host & token are not set");
+                else if (!HostIsSet)
+                    throw new Exception("Host is not set");
+                else
+                    throw new Exception("Token is not set");
+            }
+        }
+
+        #endregion
+
+        #region Getters
         /// <summary>
         /// 
         /// </summary>
@@ -681,5 +722,8 @@ namespace MoodleApiWrapper
             }
         }
         #endregion
+        
+        #endregion
     }
 }
+
