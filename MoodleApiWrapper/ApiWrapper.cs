@@ -554,7 +554,7 @@ namespace MoodleApiWrapper
                 query.Append(
                     "webservice/rest/server.php?" +
                     $"wstoken={ApiToken}&" +
-                    $"wsfunction={ParseMethod(Methods.core_user_delete_users)}&" +
+                    $"wsfunction={ParseMethod(Methods.core_role_assign_roles)}&" +
                     $"moodlewsrestformat={ParseFormat(Format.JSON)}&" +
                     $"assignments[0][roleid]={role_id}&" +
                     $"assignments[0][userid]={user_id}");
@@ -576,6 +576,45 @@ namespace MoodleApiWrapper
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="role_id"></param>
+        /// <param name="user_id"></param>
+        /// <param name="context_id"></param>
+        /// <param name="context_level"></param>
+        /// <param name="instance_id"></param>
+        /// <returns></returns>
+        public static Task<ApiResponse<Success>> UnassignRoles(int role_id, int user_id, string context_id = "",
+           string context_level = "", int instance_id = Int32.MinValue)
+        {
+            if (HostIsSet && TokenIsSet)
+            {
+                StringBuilder query = new StringBuilder();
+                query.Append(
+                    "webservice/rest/server.php?" +
+                    $"wstoken={ApiToken}&" +
+                    $"wsfunction={ParseMethod(Methods.core_role_unassign_roles)}&" +
+                    $"moodlewsrestformat={ParseFormat(Format.JSON)}&" +
+                    $"assignments[0][roleid]={role_id}&" +
+                    $"assignments[0][userid]={user_id}");
+                if (context_id.Any()) query.Append($"&assignments[0][contextid]={context_id}");
+                if (context_level.Any()) query.Append($"&assignments[0][contextlevel]={context_level}");
+                if (instance_id != Int32.MinValue) query.Append($"&assignments[0][instanceid]={instance_id}");
+
+                return Get<Success>(Host.AbsoluteUri + query);
+            }
+            else
+            {
+                if (!HostIsSet && TokenIsSet)
+                    throw new Exception("Host & token are not set");
+                else if (!HostIsSet)
+                    throw new Exception("Host is not set");
+                else
+                    throw new Exception("Token is not set");
+            }
+
+        }
 
         /// <summary>
         /// 
