@@ -836,7 +836,59 @@ namespace MoodleApiWrapper
             }
         }
 
+        public static Task<ApiResponse<Group>> GetGroup(int group_id)
+        {
+            if (HostIsSet && TokenIsSet)
+            {
+                StringBuilder query = new StringBuilder();
+                query.Append(
+                    "webservice/rest/server.php?" +
+                    $"wstoken={ApiToken}&" +
+                    $"wsfunction={ParseMethod(Methods.core_group_get_groups)}&" +
+                    $"moodlewsrestformat={ParseFormat(Format.JSON)}&" +
+                    $"groupids[0]={group_id}");
 
+                return Get<Group>(Host.AbsoluteUri + query);
+            }
+            else
+            {
+                if (!HostIsSet && TokenIsSet)
+                    throw new Exception("Host & token are not set");
+                else if (!HostIsSet)
+                    throw new Exception("Host is not set");
+                else
+                    throw new Exception("Token is not set");
+            }
+        }
+
+        public static Task<ApiResponse<Group>> GetGroups(int[] group_ids)
+        {
+            if (HostIsSet && TokenIsSet)
+            {
+                StringBuilder query = new StringBuilder();
+                query.Append(
+                    "webservice/rest/server.php?" +
+                    $"wstoken={ApiToken}&" +
+                    $"wsfunction={ParseMethod(Methods.core_group_get_groups)}&" +
+                    $"moodlewsrestformat={ParseFormat(Format.JSON)}");
+
+                for (int i = 0; i < group_ids.Count(); i++)
+                {
+                    query.Append($"&groupids[{i}]={group_ids[i]}");
+                }
+
+                return Get<Group>(Host.AbsoluteUri + query);
+            }
+            else
+            {
+                if (!HostIsSet && TokenIsSet)
+                    throw new Exception("Host & token are not set");
+                else if (!HostIsSet)
+                    throw new Exception("Host is not set");
+                else
+                    throw new Exception("Token is not set");
+            }
+        }
 
 
         #endregion
