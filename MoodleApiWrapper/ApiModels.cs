@@ -281,13 +281,15 @@ namespace MoodleApiWrapper
     public class Warning : ICloneable
     {
         [JsonConstructor]
-        internal Warning(string item, string warningcode, string message)
+        internal Warning(string item, string warningcode, string message, int itemid)
         {
             this.item = item;
+            this.itemid = itemid;
             this.warningcode = warningcode;
             this.message = message;
         }
 
+       public int itemid { get; set; }
         public string item { get; set; }
         public string warningcode { get; set; }
         public string message { get; set; }
@@ -559,6 +561,23 @@ namespace MoodleApiWrapper
         {
             return MemberwiseClone();
         }
+    }
+
+    public class UpdateCourseRoot : IDataModel, ICloneable
+    {
+        [JsonConstructor]
+        internal UpdateCourseRoot(List<Warning> warnings)
+        {
+            this.warnings = warnings;
+        }
+
+        public object Clone()
+        {
+            return MemberwiseClone();
+        }
+
+        public List<Warning> warnings { get; set; }
+
     }
 
     public class AuthToken : ICloneable, IDataModel

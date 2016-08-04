@@ -24,13 +24,7 @@ namespace console
             var token = await ApiWrapper.GetApiToken("tom", "MK3$tpthggguhdwu", "services");
             ApiWrapper.ApiToken = token.Data.token;
           //  var created = await ApiWrapper.CreateUser("tvlll", "AaO", "vdStr", "linden@tom.nl", "zydcp-Q!GA1FdQbmmd");
-            var fullnames = new string[] {"CursusEen", "CursusTwee", "CursusDrie", "CursusVier", "CursusVijf" };
-            var shortnames = new string[] { "Een", "Twee", "Drie", "Vier", "Vijf" };
-            var ids = new int[] {1, 1, 1, 1, 1};
-
-            var test = await ApiWrapper.CreateCourses(fullnames, shortnames, ids);
-
-            test = null;
+             var test = await ApiWrapper.GetCourses();
         }
     }
 }

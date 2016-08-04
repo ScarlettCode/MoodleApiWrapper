@@ -1018,7 +1018,7 @@ namespace MoodleApiWrapper
                 if (summaryformat != 1) query.Append($"&courses[0][summaryformat ]={summaryformat}");
                 if (format.Any()) query.Append($"&courses[0][format]={format}");
                 if (showgrades != 0) query.Append($"&courses[0][showgrades]={showgrades}");
-                if (startdate.Equals(default(DateTime))) query.Append($"&courses[0][startdate]={DateTimeToUnixTimestamp(startdate)}");
+                if (!startdate.Equals(default(DateTime))) query.Append($"&courses[0][startdate]={DateTimeToUnixTimestamp(startdate)}");
                 if (newsitems!=0) query.Append($"&courses[0][newsitems]={newsitems}");
                 if (numsections != int.MaxValue) query.Append($"&courses[0][numsections]={numsections}");
                 if (maxbytes != 104857600) query.Append($"&courses[0][maxbytes]={category_id}");
@@ -1082,7 +1082,61 @@ namespace MoodleApiWrapper
                     throw new Exception("Token is not set");
             }
         }
-        
+
+        public static Task<ApiResponse<UpdateCourseRoot>> UpdateCourse(int id, string fullname = "", string shortname = "", int category_id = Int32.MaxValue,
+    string idnumber = "", string summary = "", int summaryformat = 1, string format = "", int showgrades = 0, int newsitems = 0,
+    DateTime startdate = default(DateTime), int numsections = int.MaxValue, int maxbytes = 104857600, int showreports = 1,
+    int visible = 0, int hiddensections = int.MaxValue, int groupmode = 0,
+    int groupmodeforce = 0, int defaultgroupingid = 0, int enablecompletion = int.MaxValue,
+    int completenotify = 0, string lang = "", string forcetheme = "",
+    string courcCourseformatoption = ""/*not implemented*/)
+        {
+            if (HostIsSet && TokenIsSet)
+            {
+                StringBuilder query = new StringBuilder();
+                query.Append(
+                    "webservice/rest/server.php?" +
+                    $"wstoken={ApiToken}&" +
+                    $"wsfunction={ParseMethod(Methods.core_course_update_courses)}&" +
+                    $"moodlewsrestformat={ParseFormat(Format.JSON)}&" +
+                    $"courses[0][id]={id}");
+
+                if (fullname.Any()) query.Append($"&courses[0][fullname]={fullname}");
+                if (shortname.Any()) query.Append($"&courses[0][shortname]={shortname}");
+                if (category_id != Int32.MaxValue) query.Append($"&courses[0][categoryid]={category_id}");
+                if (idnumber.Any()) query.Append($"&courses[0][idnumber]={idnumber}");
+                if (summary.Any()) query.Append($"&courses[0][summary]={summary}");
+                if (summaryformat != 1) query.Append($"&courses[0][summaryformat ]={summaryformat}");
+                if (format.Any()) query.Append($"&courses[0][format]={format}");
+                if (showgrades != 0) query.Append($"&courses[0][showgrades]={showgrades}");
+                if (!startdate.Equals(default(DateTime))) query.Append($"&courses[0][startdate]={DateTimeToUnixTimestamp(startdate)}");
+                if (newsitems != 0) query.Append($"&courses[0][newsitems]={newsitems}");
+                if (numsections != int.MaxValue) query.Append($"&courses[0][numsections]={numsections}");
+                if (maxbytes != 104857600) query.Append($"&courses[0][maxbytes]={category_id}");
+                if (showreports != 1) query.Append($"&courses[0][showreports]={showreports}");
+                if (visible != 0) query.Append($"&courses[0][visible]={visible}");
+                if (hiddensections != int.MaxValue) query.Append($"&courses[0][hiddensections]={hiddensections}");
+                if (groupmode != 0) query.Append($"&courses[0][groupmode]={groupmode}");
+                if (groupmodeforce != 0) query.Append($"&courses[0][groupmodeforce]={groupmodeforce}");
+                if (defaultgroupingid != 0) query.Append($"&courses[0][defaultgroupingid]={defaultgroupingid}");
+                if (enablecompletion != int.MaxValue) query.Append($"&courses[0][enablecompletion]={enablecompletion}");
+                if (completenotify != 0) query.Append($"&courses[0][completenotify]={completenotify}");
+                if (lang.Any()) query.Append($"&courses[0][lang]={lang}");
+                if (forcetheme.Any()) query.Append($"&courses[0][forcetheme]={forcetheme}");
+
+                return Get<UpdateCourseRoot>(Host.AbsoluteUri + query);
+            }
+            else
+            {
+                if (!HostIsSet && TokenIsSet)
+                    throw new Exception("Host & token are not set");
+                else if (!HostIsSet)
+                    throw new Exception("Host is not set");
+                else
+                    throw new Exception("Token is not set");
+            }
+        }
+
         #endregion
 
         #region Getters
@@ -1136,7 +1190,7 @@ namespace MoodleApiWrapper
                             var data = JArray.Parse(result);
                             return new ApiResponse<T>(new ApiResponseRaw(data));
                         }
-                        catch
+                        catch(Exception ex)
                         {
                             var data = JObject.Parse(result);
                             return new ApiResponse<T>(new ApiResponseRaw(data));
