@@ -132,6 +132,12 @@ namespace MoodleApiWrapper
 
         #region functions
 
+        private static double DateTimeToUnixTimestamp(DateTime dateTime)
+        {
+            return (TimeZoneInfo.ConvertTimeToUtc(dateTime) -
+                   new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc)).TotalSeconds;
+        }
+
         #region Authentications
         /// <summary>
         /// Returns your Api Token needed to make any calls
@@ -959,8 +965,124 @@ namespace MoodleApiWrapper
             }
         }
 
+        /// <summary>
+        /// Create new course
+        /// </summary>
+        /// <param name="fullname"><summary>Full name of the course</summary></param>
+        /// <param name="shortname"><summary>Shortname of the course</summary></param>
+        /// <param name="category_id"><summary>Category ID of the course</summary></param>
+        /// <param name="idnumber"><summary>Optional //id number</summary></param>
+        /// <param name="summary"><summary>Optional //summary</summary></param>
+        /// <param name="summaryformat"><summary>Default to "1" //summary format (1 = HTML, 0 = MOODLE, 2 = PLAIN or 4 = MARKDOWN)</summary></param>
+        /// <param name="format"><summary>Default to "topics" //course format: weeks, topics, social, site,..</summary></param>
+        /// <param name="showgrades"><summary>Default to "0" //1 if grades are shown, otherwise 0</summary></param>
+        /// <param name="newsitems"><summary>Default to "0" //number of recent items appearing on the course page</summary></param>
+        /// <param name="startdate"><summary>Optional //timestamp when the course start</summary></param>
+        /// <param name="numsections"><summary>Optional //(deprecated, use courseformatoptions) number of weeks/topics</summary></param>
+        /// <param name="maxbytes"><summary>Default to "104857600" //largest size of file that can be uploaded into the course</summary></param>
+        /// <param name="showreports"><summary>Default to "1" //are activity report shown (yes = 1, no =0)</summary></param>
+        /// <param name="visible"><summary>Optional //1: available to student, 0:not available</summary></param>
+        /// <param name="hiddensections"><summary>Optional //(deprecated, use courseformatoptions) How the hidden sections in the course are displayed to students</summary></param>
+        /// <param name="groupmode"><summary>Default to "0" //no group, separate, visible</summary></param>
+        /// <param name="groupmodeforce"><summary>Default to "0" //1: yes, 0: no</summary></param>
+        /// <param name="defaultgroupingid"><summary>Default to "0" //default grouping id</summary></param>
+        /// <param name="enablecompletion"><summary>Optional //Enabled, control via completion and activity settings. Disabled, not shown in activity settings.</summary></param>
+        /// <param name="completenotify"><summary>Optional //1: yes 0: no</summary></param>
+        /// <param name="lang"><summary>//forced course language</summary></param>
+        /// <param name="forcetheme"><summary>Optional //name of the force theme</summary></param>
+        /// <param name="courcCourseformatoption"><summary>Optional //additional options for particular course format list of ( object { name string //course format option name
+        ///value string //course format option value } )} )</summary></param>
+        /// <returns></returns>
+        public static Task<ApiResponse<NewCourse>> CreateCourse(string fullname, string shortname, int category_id,
+            string idnumber = "", string summary = "", int summaryformat = 1, string format = "", int showgrades = 0, int newsitems = 0,
+            DateTime startdate = default(DateTime), int numsections = int.MaxValue, int maxbytes = 104857600, int showreports = 1, 
+            int visible = 0, int hiddensections = int.MaxValue, int groupmode = 0,
+            int groupmodeforce = 0, int defaultgroupingid = 0, int enablecompletion = int.MaxValue,
+            int completenotify = 0, string lang = "", string forcetheme = "",
+            string courcCourseformatoption = ""/*not implemented*/)
+        {
+            if (HostIsSet && TokenIsSet)
+            {
+                StringBuilder query = new StringBuilder();
+                query.Append(
+                    "webservice/rest/server.php?" +
+                    $"wstoken={ApiToken}&" +
+                    $"wsfunction={ParseMethod(Methods.core_course_create_courses)}&" +
+                    $"moodlewsrestformat={ParseFormat(Format.JSON)}&" +
+                    $"courses[0][fullname]={fullname}&"+
+                    $"courses[0][shortname]={shortname}&"+
+                    $"courses[0][categoryid]={category_id}");
 
+                if(idnumber.Any()) query.Append($"&courses[0][idnumber]={idnumber}");
+                if (summary.Any()) query.Append($"&courses[0][summary]={summary}");
+                if (summaryformat != 1) query.Append($"&courses[0][summaryformat ]={summaryformat}");
+                if (format.Any()) query.Append($"&courses[0][format]={format}");
+                if (showgrades != 0) query.Append($"&courses[0][showgrades]={showgrades}");
+                if (startdate.Equals(default(DateTime))) query.Append($"&courses[0][startdate]={DateTimeToUnixTimestamp(startdate)}");
+                if (newsitems!=0) query.Append($"&courses[0][newsitems]={newsitems}");
+                if (numsections != int.MaxValue) query.Append($"&courses[0][numsections]={numsections}");
+                if (maxbytes != 104857600) query.Append($"&courses[0][maxbytes]={category_id}");
+                if (showreports != 1) query.Append($"&courses[0][showreports]={showreports}");
+                if (visible != 0) query.Append($"&courses[0][visible]={visible}");
+                if (hiddensections != int.MaxValue) query.Append($"&courses[0][hiddensections]={hiddensections}");
+                if (groupmode != 0) query.Append($"&courses[0][groupmode]={groupmode}");
+                if (groupmodeforce != 0) query.Append($"&courses[0][groupmodeforce]={groupmodeforce}");
+                if (defaultgroupingid != 0) query.Append($"&courses[0][defaultgroupingid]={defaultgroupingid}");
+                if (enablecompletion != int.MaxValue) query.Append($"&courses[0][enablecompletion]={enablecompletion}");
+                if (completenotify != 0) query.Append($"&courses[0][completenotify]={completenotify}");
+                if (lang.Any()) query.Append($"&courses[0][lang]={lang}");
+                if (forcetheme.Any()) query.Append($"&courses[0][forcetheme]={forcetheme}");
 
+                return Get<NewCourse>(Host.AbsoluteUri + query);
+            }
+            else
+            {
+                if (!HostIsSet && TokenIsSet)
+                    throw new Exception("Host & token are not set");
+                else if (!HostIsSet)
+                    throw new Exception("Host is not set");
+                else
+                    throw new Exception("Token is not set");
+            }
+        }
+        /// <summary>
+        /// Create new courses
+        /// </summary>
+        /// <param name="fullname"></param>
+        /// <param name="shortname"></param>
+        /// <param name="category_ids"></param>
+        /// <returns></returns>
+        public static Task<ApiResponse<NewCourse>> CreateCourses(string[] fullname, string[] shortname,int[] category_ids)
+        {
+            if (HostIsSet && TokenIsSet)
+            {
+                StringBuilder query = new StringBuilder();
+                query.Append(
+                    "webservice/rest/server.php?" +
+                    $"wstoken={ApiToken}&" +
+                    $"wsfunction={ParseMethod(Methods.core_course_create_courses)}&" +
+                    $"moodlewsrestformat={ParseFormat(Format.JSON)}");
+                for (int i = 0; i < fullname.Count(); i++)
+                {
+                    query.Append(
+                        $"&courses[{i}][fullname]={fullname[i]}" +
+                        $"&courses[{i}][shortname]={shortname[i]}" +
+                        $"&courses[{i}][categoryid]={category_ids[i]}");
+                }
+
+                return Get<NewCourse>(Host.AbsoluteUri + query);
+            }
+            else
+            {
+                if (!HostIsSet && TokenIsSet)
+                    throw new Exception("Host & token are not set");
+                else if (!HostIsSet)
+                    throw new Exception("Host is not set");
+                else
+                    throw new Exception("Token is not set");
+            }
+        }
+        
         #endregion
 
         #region Getters

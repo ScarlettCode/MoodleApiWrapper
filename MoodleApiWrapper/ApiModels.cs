@@ -543,6 +543,24 @@ namespace MoodleApiWrapper
         }
     }
 
+    public class NewCourse : ICloneable, IDataModel
+    {
+        public int id { get; set; }
+        public string shortname { get; set; }
+
+        [JsonConstructor]
+        internal NewCourse(int id, string username)
+        {
+            this.id = id;
+            this.shortname = username;
+        }
+
+        public object Clone()
+        {
+            return MemberwiseClone();
+        }
+    }
+
     public class AuthToken : ICloneable, IDataModel
     {
         public string token { get; set; }
@@ -747,7 +765,7 @@ namespace MoodleApiWrapper
             this.enrolledcourses = enrolledcourses;
             this.preferences = preferences;
         }
-
+ 
         public int id { get; set; }
         public string username { get; set; }
         public string firstname { get; set; }
