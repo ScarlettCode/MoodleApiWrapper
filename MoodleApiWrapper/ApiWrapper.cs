@@ -730,6 +730,55 @@ namespace MoodleApiWrapper
 
         #endregion
 
+        #region Cource Actions
+       
+        /// <summary>
+        /// Get a listing of categories in the system. 
+        /// </summary>
+        /// <param name="criteria_key">
+        /// <summary>
+        /// criteria[0][key] - The category column to search, expected keys (value format) are:"id" (int) the category id,"name" (string)
+        ///  the category name,"parent" (int) the parent category id,"idnumber" (string) category idnumber - user must have 'moodle/category:manage'
+        ///  to search on idnumber,"visible" (int) whether the returned categories must be visible or hidden.
+        ///  If the key is not passed, then the function return all categories that the user can see. - user must have 'moodle/category:manage'
+        ///  or 'moodle/category:viewhiddencategories' to search on visible,"theme" (string) only return the categories having this theme
+        ///  - user must have 'moodle/category:manage' to search on theme
+        /// </summary>
+        /// </param>
+        /// <param name="criteria_value"><summary>Criteria[0][value] - The value to match</summary></param>
+        /// <param name="addSubCategories"><summary>Return the sub categories infos (1 - default) otherwise only the category info (0)</summary></param>
+        /// <returns></returns>
+        public static Task<ApiResponse<Category>> CourceGetCategories(string criteria_key, string criteria_value, int addSubCategories = 1 )
+        {
+            if (HostIsSet && TokenIsSet)
+            {
+                StringBuilder query = new StringBuilder();
+                query.Append(
+                    "webservice/rest/server.php?" +
+                    $"wstoken={ApiToken}&" +
+                    $"wsfunction={ParseMethod(Methods.core_course_get_categories)}&" +
+                    $"moodlewsrestformat={ParseFormat(Format.JSON)}&" +
+                    $"criteria[0][key]={criteria_key}&" +
+                    $"criteria[0][value]={criteria_value}");
+
+                if (addSubCategories != 1) query.Append($"&addsubcategories={addSubCategories}");
+
+                return Get<Category>(Host.AbsoluteUri + query);
+            }
+            else
+            {
+                if (!HostIsSet && TokenIsSet)
+                    throw new Exception("Host & token are not set");
+                else if (!HostIsSet)
+                    throw new Exception("Host is not set");
+                else
+                    throw new Exception("Token is not set");
+            }
+        }
+
+
+        #endregion
+
         #region Getters
         /// <summary>
         /// 
