@@ -13,10 +13,14 @@ namespace MoodleApiWrapper
 {
     public class ApiWrapper
     {
+
+        #region Properties
+
         /// <summary>
         /// field that holds your api token
         /// </summary>
         private static string _apiToken;
+
         /// <summary>
         /// This property sets you Api token.
         /// </summary>
@@ -32,6 +36,7 @@ namespace MoodleApiWrapper
         private static bool TokenIsSet => ApiToken.Any();
 
         private static Uri _host;
+
         public static Uri Host
         {
             get { return _host; }
@@ -43,6 +48,9 @@ namespace MoodleApiWrapper
         /// </summary>
         private static bool HostIsSet => Host.AbsoluteUri.Any();
 
+        #endregion
+
+        #region Parse methods
 
         private static string ParseFormat(Format format)
         {
@@ -55,6 +63,7 @@ namespace MoodleApiWrapper
             }
             throw new ArgumentOutOfRangeException("format");
         }
+
 
         private static string ParseMethod(Methods method)
         {
@@ -69,7 +78,7 @@ namespace MoodleApiWrapper
                 case Methods.core_enrol_get_users_courses:
                     return "core_enrol_get_users_courses";
                 case Methods.core_user_create_users:
-                    return "core_user_create_users"; 
+                    return "core_user_create_users";
                 case Methods.core_user_update_users:
                     return "core_user_update_users";
                 case Methods.core_user_delete_users:
@@ -118,8 +127,11 @@ namespace MoodleApiWrapper
             throw new ArgumentOutOfRangeException("method");
         }
 
+        #endregion
+
 
         #region functions
+
         /// <summary>
         /// Returns your Api Token needed to make any calls
         /// <para />
@@ -132,11 +144,12 @@ namespace MoodleApiWrapper
         /// <param name="password"></param>
         /// <param name="serviceHostName"></param>
         /// <returns></returns>
-        public static Task<AuthentiactionResponse<AuthToken>> GetApiToken(string username, string password ,string serviceHostName)
+        public static Task<AuthentiactionResponse<AuthToken>> GetApiToken(string username, string password,
+            string serviceHostName)
         {
             if (HostIsSet)
             {
-                string query = 
+                string query =
                     "login/token.php" +
                     $"?username={username}" +
                     $"&password={password}" +
@@ -146,7 +159,7 @@ namespace MoodleApiWrapper
             }
             else
             {
-                throw  new Exception("Host is not set");
+                throw new Exception("Host is not set");
             }
         }
 
@@ -164,14 +177,15 @@ namespace MoodleApiWrapper
                 if (!serviceHostName.Any())
                 {
                     query = string.Format("webservice/rest/server.php" +
-                       "?wstoken={0}&moodlewsrestformat={1}&wsfunction={2}",
-                       ApiToken, ParseFormat(Format.JSON), ParseMethod(Methods.core_webservice_get_site_info));
+                                          "?wstoken={0}&moodlewsrestformat={1}&wsfunction={2}",
+                        ApiToken, ParseFormat(Format.JSON), ParseMethod(Methods.core_webservice_get_site_info));
                 }
                 else
                 {
                     query = string.Format("webservice/rest/server.php" +
-                         "?wstoken={0}&moodlewsrestformat={1}&wsfunction={2}&serviceshortnames[0]={3}",
-                         ApiToken, ParseFormat(Format.JSON), ParseMethod(Methods.core_webservice_get_site_info), serviceHostName);
+                                          "?wstoken={0}&moodlewsrestformat={1}&wsfunction={2}&serviceshortnames[0]={3}",
+                        ApiToken, ParseFormat(Format.JSON), ParseMethod(Methods.core_webservice_get_site_info),
+                        serviceHostName);
                 }
 
                 return Get<Site_info>(Host.AbsoluteUri + query);
@@ -186,6 +200,7 @@ namespace MoodleApiWrapper
                     throw new Exception("Token is not set");
             }
         }
+
         /// <summary>
         /// Search for users matching the parameters of the call. This call will return matching user accounts with profile fields.
         ///  The key/value pairs to be considered in user search. Values can not be empty. Specify different keys only once
@@ -206,7 +221,8 @@ namespace MoodleApiWrapper
         /// <param name="criteria_key1">Key of the second search parameter.</param>
         /// <param name="criteria_value1">Value of the second search term.</param>
         /// <returns></returns>
-        public static Task<ApiResponse<Users>> GetUsers(string criteria_key0, string criteria_value0, string criteria_key1 = "", string criteria_value1= "")
+        public static Task<ApiResponse<Users>> GetUsers(string criteria_key0, string criteria_value0,
+            string criteria_key1 = "", string criteria_value1 = "")
         {
             if (HostIsSet && TokenIsSet)
             {
@@ -247,6 +263,7 @@ namespace MoodleApiWrapper
                     throw new Exception("Token is not set");
             }
         }
+
         /// <summary>
         /// Retrieve users information for a specified unique field - If you want to do a user search, use GetUsers()
         /// 
@@ -267,14 +284,14 @@ namespace MoodleApiWrapper
             if (HostIsSet && TokenIsSet)
             {
                 string query = string.Empty;
-                       query =
-                        "webservice/rest/server.php?" +
-                        $"wstoken={ApiToken}&" +
-                        $"wsfunction={ParseMethod(Methods.core_user_get_users_by_field)}&" +
-                        $"moodlewsrestformat={ParseFormat(Format.JSON)}&" +
-                        $"criteria[0][key]={criteria_key}&" +
-                        $"criteria[0][value]={criteria_value}";
-                
+                query =
+                    "webservice/rest/server.php?" +
+                    $"wstoken={ApiToken}&" +
+                    $"wsfunction={ParseMethod(Methods.core_user_get_users_by_field)}&" +
+                    $"moodlewsrestformat={ParseFormat(Format.JSON)}&" +
+                    $"criteria[0][key]={criteria_key}&" +
+                    $"criteria[0][value]={criteria_value}";
+
                 return Get<Users>(Host.AbsoluteUri + query);
             }
             else
@@ -287,6 +304,7 @@ namespace MoodleApiWrapper
                     throw new Exception("Token is not set");
             }
         }
+
         /// <summary>
         /// Get the list of courses where a user is enrolled in 
         /// </summary>
@@ -308,14 +326,15 @@ namespace MoodleApiWrapper
             }
             else
             {
-                if(!HostIsSet && TokenIsSet)
+                if (!HostIsSet && TokenIsSet)
                     throw new Exception("Host & token are not set");
-                else if(!HostIsSet)
+                else if (!HostIsSet)
                     throw new Exception("Host is not set");
                 else
                     throw new Exception("Token is not set");
             }
         }
+
         /// <summary>
         /// Create a User.
         /// </summary>
@@ -343,10 +362,14 @@ namespace MoodleApiWrapper
         /// <param name="customfields_type"></param>
         /// <param name="customfields_value"></param>
         /// <returns></returns>
-        public static Task<ApiResponse<NewUser>> CreateUser(string username,string firstname,string lastname,string email, string password,
-            string auth = "", string idnumber = "",string lang = "" , string calendartye = "" , string theme = "", string timezone= "",
-            string mailformat = "", string description = "", string city ="", string country = "", string firstnamephonetic = "",
-            string lastnamephonetic = "", string middlename = "", string alternatename = "", string preferences_type = "", string preferences_value = "",
+        public static Task<ApiResponse<NewUser>> CreateUser(string username, string firstname, string lastname,
+            string email, string password,
+            string auth = "", string idnumber = "", string lang = "", string calendartye = "", string theme = "",
+            string timezone = "",
+            string mailformat = "", string description = "", string city = "", string country = "",
+            string firstnamephonetic = "",
+            string lastnamephonetic = "", string middlename = "", string alternatename = "",
+            string preferences_type = "", string preferences_value = "",
             string customfields_type = "", string customfields_value = "")
         {
             if (HostIsSet && TokenIsSet)
@@ -423,25 +446,29 @@ namespace MoodleApiWrapper
         /// <param name="customfields_type"></param>
         /// <param name="customfields_value"></param>
         /// <returns></returns>
-        public static Task<ApiResponse<NewUser>> UpdateUser(int id,string username ="", string firstname = "", string lastname = "",
-           string email = "", string password = "",string auth = "", string idnumber = "", string lang = "", string calendartye = "", string theme = "",
-           string timezone = "", string mailformat = "", string description = "", string city = "", string country = "", string firstnamephonetic = "",
-           string lastnamephonetic = "", string middlename = "", string alternatename = "", string preferences_type = "", string preferences_value = "",
-           string customfields_type = "", string customfields_value = "")
+        public static Task<ApiResponse<Success>> UpdateUser(int id, string username = "", string firstname = "",
+            string lastname = "",
+            string email = "", string password = "", string auth = "", string idnumber = "", string lang = "",
+            string calendartye = "", string theme = "",
+            string timezone = "", string mailformat = "", string description = "", string city = "", string country = "",
+            string firstnamephonetic = "",
+            string lastnamephonetic = "", string middlename = "", string alternatename = "",
+            string preferences_type = "", string preferences_value = "",
+            string customfields_type = "", string customfields_value = "")
         {
             if (HostIsSet && TokenIsSet)
             {
                 StringBuilder querybuilder = new StringBuilder();
                 querybuilder.Append(
                     "webservice/rest/server.php?" +
-                    $"wstoken={ApiToken}&wsfunction={ParseMethod(Methods.core_user_create_users)}&" +
+                    $"wstoken={ApiToken}&wsfunction={ParseMethod(Methods.core_user_update_users)}&" +
                     $"moodlewsrestformat={ParseFormat(Format.JSON)}&" +
                     $"users[0][id]={id}");
 
                 if (username.Any()) querybuilder.Append($"&users[0][username]={username}");
                 if (password.Any()) querybuilder.Append($"&users[0][password]={password}");
                 if (firstname.Any()) querybuilder.Append($"&users[0][firstname]={firstname}");
-                if (lastname.Any()) querybuilder.Append($"&users[0][lastname]={lastname}"); 
+                if (lastname.Any()) querybuilder.Append($"&users[0][lastname]={lastname}");
                 if (email.Any()) querybuilder.Append($"&users[0][email]={email}");
                 if (auth.Any()) querybuilder.Append($"&users[0][auth]={auth}");
                 if (idnumber.Any()) querybuilder.Append($"&users[0][auth]={idnumber}");
@@ -463,7 +490,7 @@ namespace MoodleApiWrapper
                 if (customfields_value.Any()) querybuilder.Append($"&users[0][auth]={customfields_value}");
 
 
-                return Get<NewUser>(Host.AbsoluteUri + querybuilder.ToString());
+                return Get<Success>(Host.AbsoluteUri + querybuilder.ToString());
             }
             else
             {
@@ -476,19 +503,24 @@ namespace MoodleApiWrapper
             }
         }
 
-        public static Task<ApiResponse<NewUser>> DeleteUser(int id)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static Task<ApiResponse<Success>> DeleteUser(int id)
         {
             if (HostIsSet && TokenIsSet)
             {
                 string query = string.Empty;
                 query =
-                 "webservice/rest/server.php?" +
-                 $"wstoken={ApiToken}&" +
-                 $"wsfunction={ParseMethod(Methods.core_user_get_users_by_field)}&" +
-                 $"moodlewsrestformat={ParseFormat(Format.JSON)}&" +
-                 $"userids[0]={id}";
+                    "webservice/rest/server.php?" +
+                    $"wstoken={ApiToken}&" +
+                    $"wsfunction={ParseMethod(Methods.core_user_delete_users)}&" +
+                    $"moodlewsrestformat={ParseFormat(Format.JSON)}&" +
+                    $"userids[0]={id}";
 
-                return Get<NewUser>(Host.AbsoluteUri + query);
+                return Get<Success>(Host.AbsoluteUri + query);
             }
             else
             {
@@ -501,6 +533,56 @@ namespace MoodleApiWrapper
             }
 
         }
+
+        /// <summary>
+        /// Manual role assignments. This call should be made in an array. 
+        /// </summary>
+        /// <param name="role_id">
+        /// <summary>Role to assign to the user</summary>
+        /// </param>
+        /// <param name="user_id"></param>
+        /// <param name="context_id"></param>
+        /// <param name="context_level"></param>
+        /// <param name="instance_id"></param>
+        /// <returns></returns>
+        public static Task<ApiResponse<Success>> AssignRoles(int role_id, int user_id, string context_id = "",
+            string context_level = "", int instance_id = Int32.MinValue)
+        {
+            if (HostIsSet && TokenIsSet)
+            {
+                StringBuilder query = new StringBuilder();
+                query.Append(
+                    "webservice/rest/server.php?" +
+                    $"wstoken={ApiToken}&" +
+                    $"wsfunction={ParseMethod(Methods.core_user_delete_users)}&" +
+                    $"moodlewsrestformat={ParseFormat(Format.JSON)}&" +
+                    $"assignments[0][roleid]={role_id}&" +
+                    $"assignments[0][userid]={user_id}");
+                if (context_id.Any()) query.Append($"&assignments[0][contextid]={context_id}");
+                if (context_level.Any()) query.Append($"&assignments[0][contextlevel]={context_level}");
+                if (instance_id != Int32.MinValue) query.Append($"&assignments[0][instanceid]={instance_id}");
+
+                return Get<Success>(Host.AbsoluteUri + query);
+            }
+            else
+            {
+                if (!HostIsSet && TokenIsSet)
+                    throw new Exception("Host & token are not set");
+                else if (!HostIsSet)
+                    throw new Exception("Host is not set");
+                else
+                    throw new Exception("Token is not set");
+            }
+
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="uri"></param>
+        /// <returns></returns>
         private static async Task<AuthentiactionResponse<T>> GetAuth<T>(string uri) where T : IDataModel
         {
             try
@@ -511,7 +593,7 @@ namespace MoodleApiWrapper
                     using (var reader = new StreamReader(response.GetResponseStream()))
                     {
                         var data = JObject.Parse(await reader.ReadToEndAsync());
-                       return new AuthentiactionResponse<T>(new AuthentiactionResponseRaw(data));
+                        return new AuthentiactionResponse<T>(new AuthentiactionResponseRaw(data));
                     }
                 }
             }
@@ -522,6 +604,12 @@ namespace MoodleApiWrapper
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="uri"></param>
+        /// <returns></returns>
         private static async Task<ApiResponse<T>> Get<T>(string uri) where T : IDataModel
         {
             try
@@ -532,6 +620,8 @@ namespace MoodleApiWrapper
                     using (var reader = new StreamReader(response.GetResponseStream()))
                     {
                         var result = await reader.ReadToEndAsync();
+                        if (result.ToLower() == "null")
+                            result = "{IsSuccessful: true,}";
                         try
                         {
                             var data = JArray.Parse(result);
@@ -551,10 +641,6 @@ namespace MoodleApiWrapper
                 throw new WebException("No internet connection.");
             }
         }
-
-  
-        
         #endregion
-
     }
 }

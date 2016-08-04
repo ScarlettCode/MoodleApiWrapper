@@ -4,11 +4,10 @@ using Newtonsoft.Json.Linq;
 
 namespace MoodleApiWrapper
 {
-    /// <summary>
-    /// Represents the API response.
-    /// </summary>
-    /// <typeparam name="T">The type of data that's going to be contained in the response.</typeparam>
-
+ /// <summary>
+ /// Repressents the response from authentication
+ /// </summary>
+ /// <typeparam name="T"></typeparam>
     public class AuthentiactionResponse<T> where T : IDataModel
     {
         public T Data { get; private set; }
@@ -34,7 +33,10 @@ namespace MoodleApiWrapper
         }
     }
 
-
+    /// <summary>
+    /// Represents the API response.
+    /// </summary>
+    /// <typeparam name="T">The type of data that's going to be contained in the response.</typeparam>
     public class ApiResponse<T> where T : IDataModel
     {
         /// <summary>
