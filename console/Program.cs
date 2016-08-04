@@ -25,9 +25,9 @@ namespace console
             ApiWrapper.ApiToken = token.Data.token;
           //  var created = await ApiWrapper.CreateUser("tvlll", "AaO", "vdStr", "linden@tom.nl", "zydcp-Q!GA1FdQbmmd");
 
-            ApiWrapper.AssignRoles()
-            var user = await ApiWrapper.DeleteUser(12);
-            var test = "";
+            var test = await ApiWrapper.GetCources();
+
+            test = null;
         }
     }
 }

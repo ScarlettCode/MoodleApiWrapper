@@ -776,6 +776,38 @@ namespace MoodleApiWrapper
             }
         }
 
+        /// <summary>
+        /// Get a listing of courses in the system. 
+        /// </summary>
+        /// <param name="options"><summary>List of course id.If empty return all courses except front page course.</summary></param>
+        /// <returns></returns>
+        public static Task<ApiResponse<Cource>> GetCources(int options = int.MinValue)
+        {
+            if (HostIsSet && TokenIsSet)
+            {
+                StringBuilder query = new StringBuilder();
+                query.Append(
+                    "webservice/rest/server.php?" +
+                    $"wstoken={ApiToken}&" +
+                    $"wsfunction={ParseMethod(Methods.core_course_get_courses)}&" +
+                    $"moodlewsrestformat={ParseFormat(Format.JSON)}"); 
+                    if (options != int.MinValue) query.Append($"&addsubcategories={options}");
+
+                return Get<Cource>(Host.AbsoluteUri + query);
+            }
+            else
+            {
+                if (!HostIsSet && TokenIsSet)
+                    throw new Exception("Host & token are not set");
+                else if (!HostIsSet)
+                    throw new Exception("Host is not set");
+                else
+                    throw new Exception("Token is not set");
+            }
+        }
+
+
+
 
         #endregion
 
