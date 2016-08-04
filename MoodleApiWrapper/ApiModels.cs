@@ -70,6 +70,48 @@ namespace MoodleApiWrapper
         }
     }
 
+    public class Role : ICloneable
+    {
+        [JsonConstructor]
+        internal Role(int roleid, string name, string shortname, int sortorder)
+        {
+            this.roleid = roleid;
+            this.name = name;
+            this.shortname = shortname;
+            this.sortorder = sortorder;
+        }
+
+        public int roleid { get; set; }
+        public string name { get; set; }
+        public string shortname { get; set; }
+        public int sortorder { get; set; }
+
+        public object Clone()
+        {
+            return MemberwiseClone();
+        }
+    }
+
+    public class Enrolledcours : ICloneable
+    {
+        [JsonConstructor]
+        internal Enrolledcours(int id, string fullname, string shortname)
+        {
+            this.id = id;
+            this.fullname = fullname;
+            this.shortname = shortname;
+        }
+
+        public int id { get; set; }
+        public string fullname { get; set; }
+        public string shortname { get; set; }
+
+        public object Clone()
+        {
+            return MemberwiseClone();
+        }
+    }
+
     public class Advancedfeature : ICloneable
     {
         public string name { get; set; }
@@ -308,10 +350,10 @@ namespace MoodleApiWrapper
         }
     }
 
-    public class Cource : ICloneable, IDataModel
+    public class Course : ICloneable, IDataModel
     {
         [JsonConstructor]
-        internal Cource(int id, string shortname, int categoryid, int categorysortorder, string fullname, string displayname, string idnumber, string summary, int summaryformat, string format, int showgrades, int newsitems, int startdate, int numsections, int maxbytes, int showreports, int visible, int groupmode, int groupmodeforce, int defaultgroupingid, int timecreated, int timemodified, int enablecompletion, int completionnotify, string lang, string forcetheme, List<Courseformatoption> courseformatoptions, int? hiddensections)
+        internal Course(int id, string shortname, int categoryid, int categorysortorder, string fullname, string displayname, string idnumber, string summary, int summaryformat, string format, int showgrades, int newsitems, int startdate, int numsections, int maxbytes, int showreports, int visible, int groupmode, int groupmodeforce, int defaultgroupingid, int timecreated, int timemodified, int enablecompletion, int completionnotify, string lang, string forcetheme, List<Courseformatoption> courseformatoptions, int? hiddensections)
         {
             this.id = id;
             this.shortname = shortname;
@@ -673,6 +715,58 @@ namespace MoodleApiWrapper
         public string description { get; set; }
         public int descriptionformat { get; set; }
         public string enrolmentkey { get; set; }
+
+        public object Clone()
+        {
+            return MemberwiseClone();
+        }
+    }
+
+    public class EnrolledUser : IDataModel, ICloneable
+    {
+        [JsonConstructor]
+        internal EnrolledUser(int id, string username, string firstname, string lastname, string fullname, string email, string department, int firstaccess, int lastaccess, string description, int descriptionformat, string city, string country, string profileimageurlsmall, string profileimageurl, List<Group> groups, List<Role> roles, List<Enrolledcours> enrolledcourses, List<Preference> preferences)
+        {
+            this.id = id;
+            this.username = username;
+            this.firstname = firstname;
+            this.lastname = lastname;
+            this.fullname = fullname;
+            this.email = email;
+            this.department = department;
+            this.firstaccess = firstaccess;
+            this.lastaccess = lastaccess;
+            this.description = description;
+            this.descriptionformat = descriptionformat;
+            this.city = city;
+            this.country = country;
+            this.profileimageurlsmall = profileimageurlsmall;
+            this.profileimageurl = profileimageurl;
+            this.groups = groups;
+            this.roles = roles;
+            this.enrolledcourses = enrolledcourses;
+            this.preferences = preferences;
+        }
+
+        public int id { get; set; }
+        public string username { get; set; }
+        public string firstname { get; set; }
+        public string lastname { get; set; }
+        public string fullname { get; set; }
+        public string email { get; set; }
+        public string department { get; set; }
+        public int firstaccess { get; set; }
+        public int lastaccess { get; set; }
+        public string description { get; set; }
+        public int descriptionformat { get; set; }
+        public string city { get; set; }
+        public string country { get; set; }
+        public string profileimageurlsmall { get; set; }
+        public string profileimageurl { get; set; }
+        public List<Group> groups { get; set; }
+        public List<Role> roles { get; set; }
+        public List<Enrolledcours> enrolledcourses { get; set; }
+        public List<Preference> preferences { get; set; }
 
         public object Clone()
         {

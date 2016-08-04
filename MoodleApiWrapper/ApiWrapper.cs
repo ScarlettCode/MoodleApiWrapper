@@ -621,7 +621,7 @@ namespace MoodleApiWrapper
 
         #endregion
 
-        #region Cource Enrollment Actions
+        #region Course Enrollment Actions
         /// <summary>
         /// 
         /// </summary>
@@ -730,7 +730,7 @@ namespace MoodleApiWrapper
 
         #endregion
 
-        #region Cource Actions
+        #region Course Actions
        
         /// <summary>
         /// Get a listing of categories in the system. 
@@ -781,7 +781,7 @@ namespace MoodleApiWrapper
         /// </summary>
         /// <param name="options"><summary>List of course id.If empty return all courses except front page course.</summary></param>
         /// <returns></returns>
-        public static Task<ApiResponse<Cource>> GetCources(int options = int.MinValue)
+        public static Task<ApiResponse<Course>> GetCourses(int options = int.MinValue)
         {
             if (HostIsSet && TokenIsSet)
             {
@@ -793,7 +793,7 @@ namespace MoodleApiWrapper
                     $"moodlewsrestformat={ParseFormat(Format.JSON)}"); 
                     if (options != int.MinValue) query.Append($"&addsubcategories={options}");
 
-                return Get<Cource>(Host.AbsoluteUri + query);
+                return Get<Course>(Host.AbsoluteUri + query);
             }
             else
             {
@@ -836,6 +836,11 @@ namespace MoodleApiWrapper
             }
         }
 
+        /// <summary>
+        /// Returns group details. 
+        /// </summary>
+        /// <param name="group_id">Group id</param>
+        /// <returns></returns>
         public static Task<ApiResponse<Group>> GetGroup(int group_id)
         {
             if (HostIsSet && TokenIsSet)
@@ -860,7 +865,11 @@ namespace MoodleApiWrapper
                     throw new Exception("Token is not set");
             }
         }
-
+        /// <summary>
+        /// Returns group details. 
+        /// </summary>
+        /// <param name="group_ids"><summary>Group Ids</summary></param>
+        /// <returns></returns>
         public static Task<ApiResponse<Group>> GetGroups(int[] group_ids)
         {
             if (HostIsSet && TokenIsSet)
@@ -889,6 +898,67 @@ namespace MoodleApiWrapper
                     throw new Exception("Token is not set");
             }
         }
+
+        /// <summary>
+        /// Returns all groups in specified course. 
+        /// </summary>
+        /// <param name="course_id"><summary>Course Id</summary></param>
+        /// <returns></returns>
+        public static Task<ApiResponse<Group>> GetCourseGroups(int course_id)
+        {
+            if (HostIsSet && TokenIsSet)
+            {
+                StringBuilder query = new StringBuilder();
+                query.Append(
+                    "webservice/rest/server.php?" +
+                    $"wstoken={ApiToken}&" +
+                    $"wsfunction={ParseMethod(Methods.core_group_get_course_groups)}&" +
+                    $"moodlewsrestformat={ParseFormat(Format.JSON)}&"+
+                    $"courseid={course_id}");
+
+                return Get<Group>(Host.AbsoluteUri + query);
+            }
+            else
+            {
+                if (!HostIsSet && TokenIsSet)
+                    throw new Exception("Host & token are not set");
+                else if (!HostIsSet)
+                    throw new Exception("Host is not set");
+                else
+                    throw new Exception("Token is not set");
+            }
+        }
+
+        /// <summary>
+        /// Get enrolled users by course id. 
+        /// </summary>
+        /// <param name="course_id"></param>
+        /// <returns></returns>
+        public static Task<ApiResponse<EnrolledUser>> GetEnrolledUsersByCourse(int course_id)
+        {
+            if (HostIsSet && TokenIsSet)
+            {
+                StringBuilder query = new StringBuilder();
+                query.Append(
+                    "webservice/rest/server.php?" +
+                    $"wstoken={ApiToken}&" +
+                    $"wsfunction={ParseMethod(Methods.core_enrol_get_enrolled_users)}&" +
+                    $"moodlewsrestformat={ParseFormat(Format.JSON)}&" +
+                    $"courseid={course_id}");
+
+                return Get<EnrolledUser>(Host.AbsoluteUri + query);
+            }
+            else
+            {
+                if (!HostIsSet && TokenIsSet)
+                    throw new Exception("Host & token are not set");
+                else if (!HostIsSet)
+                    throw new Exception("Host is not set");
+                else
+                    throw new Exception("Token is not set");
+            }
+        }
+
 
 
         #endregion

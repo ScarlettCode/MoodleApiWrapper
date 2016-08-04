@@ -25,9 +25,8 @@ namespace console
             ApiWrapper.ApiToken = token.Data.token;
           //  var created = await ApiWrapper.CreateUser("tvlll", "AaO", "vdStr", "linden@tom.nl", "zydcp-Q!GA1FdQbmmd");
 
-            var groupids = new int[] { 1,2,3 };
-
-            var test = await ApiWrapper.GetGroups(groupids);
+           
+            var test = await ApiWrapper.GetEnrolledUsersByCourse(2);
 
             test = null;
         }
