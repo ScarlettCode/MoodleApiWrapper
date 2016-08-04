@@ -748,7 +748,7 @@ namespace MoodleApiWrapper
         /// <param name="criteria_value"><summary>Criteria[0][value] - The value to match</summary></param>
         /// <param name="addSubCategories"><summary>Return the sub categories infos (1 - default) otherwise only the category info (0)</summary></param>
         /// <returns></returns>
-        public static Task<ApiResponse<Category>> CourceGetCategories(string criteria_key, string criteria_value, int addSubCategories = 1 )
+        public static Task<ApiResponse<Category>> GetCategories(string criteria_key, string criteria_value, int addSubCategories = 1 )
         {
             if (HostIsSet && TokenIsSet)
             {
@@ -794,6 +794,36 @@ namespace MoodleApiWrapper
                     if (options != int.MinValue) query.Append($"&addsubcategories={options}");
 
                 return Get<Cource>(Host.AbsoluteUri + query);
+            }
+            else
+            {
+                if (!HostIsSet && TokenIsSet)
+                    throw new Exception("Host & token are not set");
+                else if (!HostIsSet)
+                    throw new Exception("Host is not set");
+                else
+                    throw new Exception("Token is not set");
+            }
+        }
+
+        /// <summary>
+        /// Get course contents
+        /// </summary>
+        /// <param name="course_id"><summary>Course Id</summary></param>
+        /// <returns></returns>
+        public static Task<ApiResponse<Content>> GetContents(int course_id)
+        {
+            if (HostIsSet && TokenIsSet)
+            {
+                StringBuilder query = new StringBuilder();
+                query.Append(
+                    "webservice/rest/server.php?" +
+                    $"wstoken={ApiToken}&" +
+                    $"wsfunction={ParseMethod(Methods.core_course_get_contents)}&" +
+                    $"moodlewsrestformat={ParseFormat(Format.JSON)}&"+
+                    $"courseid={course_id}");
+                
+                return Get<Content>(Host.AbsoluteUri + query);
             }
             else
             {

@@ -25,7 +25,7 @@ namespace console
             ApiWrapper.ApiToken = token.Data.token;
           //  var created = await ApiWrapper.CreateUser("tvlll", "AaO", "vdStr", "linden@tom.nl", "zydcp-Q!GA1FdQbmmd");
 
-            var test = await ApiWrapper.GetCources();
+            var test = await ApiWrapper.GetContents(2);
 
             test = null;
         }

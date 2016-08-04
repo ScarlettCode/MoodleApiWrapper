@@ -595,4 +595,62 @@ namespace MoodleApiWrapper
             return MemberwiseClone();
         }
     }
+
+    public class Module : ICloneable
+    {
+        [JsonConstructor]
+        internal Module(int id, string name, int visible, string modicon, string modname, string modplural, string availability, int indent, string url)
+        {
+            this.id = id;
+            this.name = name;
+            this.visible = visible;
+            this.modicon = modicon;
+            this.modname = modname;
+            this.modplural = modplural;
+            this.availability = availability;
+            this.indent = indent;
+            this.url = url;
+        }
+
+        public int id { get; set; }
+        public string name { get; set; }
+        public int visible { get; set; }
+        public string modicon { get; set; }
+        public string modname { get; set; }
+        public string modplural { get; set; }
+        public string availability { get; set; }
+        public int indent { get; set; }
+        public string url { get; set; }
+
+        public object Clone()
+        {
+            return MemberwiseClone();
+        }
+    }
+
+    public class Content : ICloneable, IDataModel
+    {
+        public int id { get; set; }
+        public string name { get; set; }
+        public int visible { get; set; }
+        public string summary { get; set; }
+        public int summaryformat { get; set; }
+        public List<Module> modules { get; set; }
+
+        [JsonConstructor]
+        internal Content(int id, string name, int visible, string summary, int summaryformat, List<Module> modules)
+        {
+            this.id = id;
+            this.name = name;
+            this.visible = visible;
+            this.summary = summary;
+            this.summaryformat = summaryformat;
+            this.modules = modules;
+        }
+
+        public object Clone()
+        {
+            return MemberwiseClone();
+        }
+    }
 }
