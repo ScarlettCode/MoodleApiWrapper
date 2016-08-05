@@ -51,7 +51,16 @@ namespace MoodleApiWrapper
 
         #endregion
 
-        #region Parse methods
+   
+        #region functions
+
+        #region Helper functions
+
+        private static double DateTimeToUnixTimestamp(DateTime dateTime)
+        {
+            return (TimeZoneInfo.ConvertTimeToUtc(dateTime) -
+                   new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc)).TotalSeconds;
+        }
 
         private static string ParseFormat(Format format)
         {
@@ -129,14 +138,6 @@ namespace MoodleApiWrapper
         }
 
         #endregion
-
-        #region functions
-
-        private static double DateTimeToUnixTimestamp(DateTime dateTime)
-        {
-            return (TimeZoneInfo.ConvertTimeToUtc(dateTime) -
-                   new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc)).TotalSeconds;
-        }
 
         #region Authentications
         /// <summary>
@@ -1136,6 +1137,49 @@ namespace MoodleApiWrapper
                     throw new Exception("Token is not set");
             }
         }
+
+        #endregion
+
+        #region Grade Actions
+
+        /// <summary>
+        /// Returns grade item details and optionally student grades. 
+        /// </summary>
+        /// <param name="criteria_key"></param>
+        /// <param name="criteria_value"></param>
+        /// <param name="addSubCategories"></param>
+        /// <returns></returns>
+        public static Task<ApiResponse<Category>> GetGrades(int courseid, string component = "", int activityid = Int32.MaxValue, string[] userids = null)
+        {
+            if (HostIsSet && TokenIsSet)
+            {
+                StringBuilder query = new StringBuilder();
+                query.Append(
+                    "webservice/rest/server.php?" +
+                    $"wstoken={ApiToken}&" +
+                    $"wsfunction={ParseMethod(Methods.core_grades_get_grades)}&" +
+                    $"moodlewsrestformat={ParseFormat(Format.JSON)}&" +
+                    $"courseid={courseid}");
+
+                if (component.Any()) query.Append($"&component={component}");
+                if (activityid != int.MaxValue) query.Append($"&activityid={activityid}");
+                if (userids != null) query.Append($"&userids={userids}");
+                if (component.Any()) query.Append($"&component={component}");
+
+                return Get<Category>(Host.AbsoluteUri + query);
+            }
+            else
+            {
+                if (!HostIsSet && TokenIsSet)
+                    throw new Exception("Host & token are not set");
+                else if (!HostIsSet)
+                    throw new Exception("Host is not set");
+                else
+                    throw new Exception("Token is not set");
+            }
+        }
+
+
 
         #endregion
 
