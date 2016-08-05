@@ -56,10 +56,10 @@ namespace MoodleApiWrapper
 
         #region Helper functions
 
-        private static double DateTimeToUnixTimestamp(DateTime dateTime)
+        private static int DateTimeToUnixTimestamp(DateTime dateTime)
         {
-            return (TimeZoneInfo.ConvertTimeToUtc(dateTime) -
-                   new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc)).TotalSeconds;
+            return Convert.ToInt32((TimeZoneInfo.ConvertTimeToUtc(dateTime) -
+                   new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc)).TotalSeconds);
         }
 
         private static string ParseFormat(Format format)
@@ -148,9 +148,9 @@ namespace MoodleApiWrapper
         /// If you want to use the Mobile service, its shortname is moodle_mobile_app. Also useful to know,
         /// the database shortname field can be found in the table named external_services.
         /// </summary>
-        /// <param name="username"></param>
-        /// <param name="password"></param>
-        /// <param name="serviceHostName"></param>
+        /// <param names="username"></param>
+        /// <param names="password"></param>
+        /// <param names="serviceHostName"></param>
         /// <returns></returns>
         public static Task<AuthentiactionResponse<AuthToken>> GetApiToken(string username, string password,
             string serviceHostName)
@@ -176,7 +176,7 @@ namespace MoodleApiWrapper
         /// <summary>
         /// This API will return information about the site, web services users, and authorized API actions. This call is useful for getting site information and the capabilities of the web service user. 
         /// </summary>
-        /// <param name="serviceHostNames">Returns information about a particular service.</param>
+        /// <param names="serviceHostNames">Returns information about a particular service.</param>
         /// <returns></returns>
         public static Task<ApiResponse<Site_info>> GetSiteInfo(string serviceHostName = "")
         {
@@ -220,17 +220,17 @@ namespace MoodleApiWrapper
         ///  but the function is not designed for it. It could very slow or timeout. The function is designed to search some specific users.
         /// <para />
         /// "id" (int) matching user id<para />
-        ///"lastname" (string) user last name (Note: you can use % for searching but it may be considerably slower!)<para />
-        ///"firstname" (string) user first name (Note: you can use % for searching but it may be considerably slower!)<para />
+        ///"lastname" (string) user last names (Note: you can use % for searching but it may be considerably slower!)<para />
+        ///"firstname" (string) user first names (Note: you can use % for searching but it may be considerably slower!)<para />
         ///"idnumber" (string) matching user idnumber<para />
         ///"username" (string) matching user username<para />
         ///"email" (string) user email (Note: you can use % for searching but it may be considerably slower!)<para />
         ///"auth" (string) matching user auth plugin<para />
         /// </summary>
-        /// <param name="criteria_key0">Key of the first search parameter.</param>
-        /// <param name="criteria_value0">Value of the first search term.</param>
-        /// <param name="criteria_key1">Key of the second search parameter.</param>
-        /// <param name="criteria_value1">Value of the second search term.</param>
+        /// <param names="criteria_key0">Key of the first search parameter.</param>
+        /// <param names="criteria_value0">Value of the first search term.</param>
+        /// <param names="criteria_key1">Key of the second search parameter.</param>
+        /// <param names="criteria_value1">Value of the second search term.</param>
         /// <returns></returns>
         public static Task<ApiResponse<Users>> GetUsers(string criteria_key0, string criteria_value0,
             string criteria_key1 = "", string criteria_value1 = "")
@@ -280,15 +280,15 @@ namespace MoodleApiWrapper
         /// 
         /// Avaiable Criteria:
         ///"id" (int) matching user id
-        ///"lastname" (string) user last name (Note: you can use % for searching but it may be considerably slower!)
-        ///"firstname" (string) user first name (Note: you can use % for searching but it may be considerably slower!)
+        ///"lastname" (string) user last names (Note: you can use % for searching but it may be considerably slower!)
+        ///"firstname" (string) user first names (Note: you can use % for searching but it may be considerably slower!)
         ///"idnumber" (string) matching user idnumber
         ///"username" (string) matching user username
         ///"email" (string) user email (Note: you can use % for searching but it may be considerably slower!)
         ///"auth" (string) matching user auth plugin
         /// </summary>
-        /// <param name="criteria_key">Key of the first search parameter.</param>
-        /// <param name="criteria_value">Value of the first search term.</param>
+        /// <param names="criteria_key">Key of the first search parameter.</param>
+        /// <param names="criteria_value">Value of the first search term.</param>
         /// <returns></returns>
         public static Task<ApiResponse<Users>> GetUsersByField(string criteria_key, string criteria_value)
         {
@@ -319,7 +319,7 @@ namespace MoodleApiWrapper
         /// <summary>
         /// Get the list of courses where a user is enrolled in 
         /// </summary>
-        /// <param name="userid"></param>
+        /// <param names="userid"></param>
         /// <returns></returns>
         public static Task<ApiResponse<Cources>> GetUserCourses(int userid)
         {
@@ -349,29 +349,29 @@ namespace MoodleApiWrapper
         /// <summary>
         /// Create a User.
         /// </summary>
-        /// <param name="username"></param>
-        /// <param name="firstname"></param>
-        /// <param name="lastname"></param>
-        /// <param name="email"></param>
-        /// <param name="password"></param>
-        /// <param name="auth"></param>
-        /// <param name="idnumber"></param>
-        /// <param name="lang"></param>
-        /// <param name="calendartye"></param>
-        /// <param name="theme"></param>
-        /// <param name="timezone"></param>
-        /// <param name="mailformat"></param>
-        /// <param name="description"></param>
-        /// <param name="city"></param>
-        /// <param name="country"></param>
-        /// <param name="firstnamephonetic"></param>
-        /// <param name="lastnamephonetic"></param>
-        /// <param name="middlename"></param>
-        /// <param name="alternatename"></param>
-        /// <param name="preferences_type"></param>
-        /// <param name="preferences_value"></param>
-        /// <param name="customfields_type"></param>
-        /// <param name="customfields_value"></param>
+        /// <param names="username"></param>
+        /// <param names="firstname"></param>
+        /// <param names="lastname"></param>
+        /// <param names="email"></param>
+        /// <param names="password"></param>
+        /// <param names="auth"></param>
+        /// <param names="idnumber"></param>
+        /// <param names="lang"></param>
+        /// <param names="calendartye"></param>
+        /// <param names="theme"></param>
+        /// <param names="timezone"></param>
+        /// <param names="mailformat"></param>
+        /// <param names="description"></param>
+        /// <param names="city"></param>
+        /// <param names="country"></param>
+        /// <param names="firstnamephonetic"></param>
+        /// <param names="lastnamephonetic"></param>
+        /// <param names="middlename"></param>
+        /// <param names="alternatename"></param>
+        /// <param names="preferences_type"></param>
+        /// <param names="preferences_value"></param>
+        /// <param names="customfields_type"></param>
+        /// <param names="customfields_value"></param>
         /// <returns></returns>
         public static Task<ApiResponse<NewUser>> CreateUser(string username, string firstname, string lastname,
             string email, string password,
@@ -432,30 +432,30 @@ namespace MoodleApiWrapper
         /// <summary>
         /// Updates a user.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="username"></param>
-        /// <param name="firstname"></param>
-        /// <param name="lastname"></param>
-        /// <param name="email"></param>
-        /// <param name="password"></param>
-        /// <param name="auth"></param>
-        /// <param name="idnumber"></param>
-        /// <param name="lang"></param>
-        /// <param name="calendartye"></param>
-        /// <param name="theme"></param>
-        /// <param name="timezone"></param>
-        /// <param name="mailformat"></param>
-        /// <param name="description"></param>
-        /// <param name="city"></param>
-        /// <param name="country"></param>
-        /// <param name="firstnamephonetic"></param>
-        /// <param name="lastnamephonetic"></param>
-        /// <param name="middlename"></param>
-        /// <param name="alternatename"></param>
-        /// <param name="preferences_type"></param>
-        /// <param name="preferences_value"></param>
-        /// <param name="customfields_type"></param>
-        /// <param name="customfields_value"></param>
+        /// <param names="id"></param>
+        /// <param names="username"></param>
+        /// <param names="firstname"></param>
+        /// <param names="lastname"></param>
+        /// <param names="email"></param>
+        /// <param names="password"></param>
+        /// <param names="auth"></param>
+        /// <param names="idnumber"></param>
+        /// <param names="lang"></param>
+        /// <param names="calendartye"></param>
+        /// <param names="theme"></param>
+        /// <param names="timezone"></param>
+        /// <param names="mailformat"></param>
+        /// <param names="description"></param>
+        /// <param names="city"></param>
+        /// <param names="country"></param>
+        /// <param names="firstnamephonetic"></param>
+        /// <param names="lastnamephonetic"></param>
+        /// <param names="middlename"></param>
+        /// <param names="alternatename"></param>
+        /// <param names="preferences_type"></param>
+        /// <param names="preferences_value"></param>
+        /// <param names="customfields_type"></param>
+        /// <param names="customfields_value"></param>
         /// <returns></returns>
         public static Task<ApiResponse<Success>> UpdateUser(int id, string username = "", string firstname = "",
             string lastname = "",
@@ -517,7 +517,7 @@ namespace MoodleApiWrapper
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="id"></param>
+        /// <param names="id"></param>
         /// <returns></returns>
         public static Task<ApiResponse<Success>> DeleteUser(int id)
         {
@@ -548,13 +548,13 @@ namespace MoodleApiWrapper
         /// <summary>
         /// Manual role assignments. This call should be made in an array. 
         /// </summary>
-        /// <param name="role_id">
+        /// <param names="role_id">
         /// <summary>Role to assign to the user</summary>
         /// </param>
-        /// <param name="user_id"></param>
-        /// <param name="context_id"></param>
-        /// <param name="context_level"></param>
-        /// <param name="instance_id"></param>
+        /// <param names="user_id"></param>
+        /// <param names="context_id"></param>
+        /// <param names="context_level"></param>
+        /// <param names="instance_id"></param>
         /// <returns></returns>
         public static Task<ApiResponse<Success>> AssignRoles(int role_id, int user_id, string context_id = "",
             string context_level = "", int instance_id = Int32.MinValue)
@@ -590,11 +590,11 @@ namespace MoodleApiWrapper
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="role_id"></param>
-        /// <param name="user_id"></param>
-        /// <param name="context_id"></param>
-        /// <param name="context_level"></param>
-        /// <param name="instance_id"></param>
+        /// <param names="role_id"></param>
+        /// <param names="user_id"></param>
+        /// <param names="context_id"></param>
+        /// <param names="context_level"></param>
+        /// <param names="instance_id"></param>
         /// <returns></returns>
         public static Task<ApiResponse<Success>> UnassignRoles(int role_id, int user_id, string context_id = "",
            string context_level = "", int instance_id = Int32.MinValue)
@@ -632,12 +632,12 @@ namespace MoodleApiWrapper
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="role_id"></param>
-        /// <param name="user_id"></param>
-        /// <param name="cource_id"></param>
-        /// <param name="timestart"></param>
-        /// <param name="timeend"></param>
-        /// <param name="suspend"></param>
+        /// <param names="role_id"></param>
+        /// <param names="user_id"></param>
+        /// <param names="cource_id"></param>
+        /// <param names="timestart"></param>
+        /// <param names="timeend"></param>
+        /// <param names="suspend"></param>
         /// <returns></returns>
         public static Task<ApiResponse<Success>> EnrolUser(int role_id, int user_id, int cource_id,
                                                             int timestart = Int32.MinValue, int timeend = Int32.MinValue, int suspend = Int32.MinValue)
@@ -673,8 +673,8 @@ namespace MoodleApiWrapper
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="group_id"></param>
-        /// <param name="user_id"></param>
+        /// <param names="group_id"></param>
+        /// <param names="user_id"></param>
         /// <returns></returns>
         public static Task<ApiResponse<Success>> AddGroupMember(int group_id, int user_id)
         {
@@ -705,8 +705,8 @@ namespace MoodleApiWrapper
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="group_id"></param>
-        /// <param name="user_id"></param>
+        /// <param names="group_id"></param>
+        /// <param names="user_id"></param>
         /// <returns></returns>
         public static Task<ApiResponse<Success>> DeleteGroupMember(int group_id, int user_id)
         {
@@ -742,18 +742,18 @@ namespace MoodleApiWrapper
         /// <summary>
         /// Get a listing of categories in the system. 
         /// </summary>
-        /// <param name="criteria_key">
+        /// <param names="criteria_key">
         /// <summary>
-        /// criteria[0][key] - The category column to search, expected keys (value format) are:"id" (int) the category id,"name" (string)
-        ///  the category name,"parent" (int) the parent category id,"idnumber" (string) category idnumber - user must have 'moodle/category:manage'
+        /// criteria[0][key] - The category column to search, expected keys (value format) are:"id" (int) the category id,"names" (string)
+        ///  the category names,"parent" (int) the parent category id,"idnumber" (string) category idnumber - user must have 'moodle/category:manage'
         ///  to search on idnumber,"visible" (int) whether the returned categories must be visible or hidden.
         ///  If the key is not passed, then the function return all categories that the user can see. - user must have 'moodle/category:manage'
         ///  or 'moodle/category:viewhiddencategories' to search on visible,"theme" (string) only return the categories having this theme
         ///  - user must have 'moodle/category:manage' to search on theme
         /// </summary>
         /// </param>
-        /// <param name="criteria_value"><summary>Criteria[0][value] - The value to match</summary></param>
-        /// <param name="addSubCategories"><summary>Return the sub categories infos (1 - default) otherwise only the category info (0)</summary></param>
+        /// <param names="criteria_value"><summary>Criteria[0][value] - The value to match</summary></param>
+        /// <param names="addSubCategories"><summary>Return the sub categories infos (1 - default) otherwise only the category info (0)</summary></param>
         /// <returns></returns>
         public static Task<ApiResponse<Category>> GetCategories(string criteria_key, string criteria_value, int addSubCategories = 1 )
         {
@@ -786,7 +786,7 @@ namespace MoodleApiWrapper
         /// <summary>
         /// Get a listing of courses in the system. 
         /// </summary>
-        /// <param name="options"><summary>List of course id.If empty return all courses except front page course.</summary></param>
+        /// <param names="options"><summary>List of course id.If empty return all courses except front page course.</summary></param>
         /// <returns></returns>
         public static Task<ApiResponse<Course>> GetCourses(int options = int.MinValue)
         {
@@ -816,7 +816,7 @@ namespace MoodleApiWrapper
         /// <summary>
         /// Get course contents
         /// </summary>
-        /// <param name="course_id"><summary>Course Id</summary></param>
+        /// <param names="course_id"><summary>Course Id</summary></param>
         /// <returns></returns>
         public static Task<ApiResponse<Content>> GetContents(int course_id)
         {
@@ -846,7 +846,7 @@ namespace MoodleApiWrapper
         /// <summary>
         /// Returns group details. 
         /// </summary>
-        /// <param name="group_id">Group id</param>
+        /// <param names="group_id">Group id</param>
         /// <returns></returns>
         public static Task<ApiResponse<Group>> GetGroup(int group_id)
         {
@@ -875,7 +875,7 @@ namespace MoodleApiWrapper
         /// <summary>
         /// Returns group details. 
         /// </summary>
-        /// <param name="group_ids"><summary>Group Ids</summary></param>
+        /// <param names="group_ids"><summary>Group Ids</summary></param>
         /// <returns></returns>
         public static Task<ApiResponse<Group>> GetGroups(int[] group_ids)
         {
@@ -909,7 +909,7 @@ namespace MoodleApiWrapper
         /// <summary>
         /// Returns all groups in specified course. 
         /// </summary>
-        /// <param name="course_id"><summary>Course Id</summary></param>
+        /// <param names="course_id"><summary>Course Id</summary></param>
         /// <returns></returns>
         public static Task<ApiResponse<Group>> GetCourseGroups(int course_id)
         {
@@ -939,7 +939,7 @@ namespace MoodleApiWrapper
         /// <summary>
         /// Get enrolled users by course id. 
         /// </summary>
-        /// <param name="course_id"></param>
+        /// <param names="course_id"></param>
         /// <returns></returns>
         public static Task<ApiResponse<EnrolledUser>> GetEnrolledUsersByCourse(int course_id)
         {
@@ -969,29 +969,29 @@ namespace MoodleApiWrapper
         /// <summary>
         /// Create new course
         /// </summary>
-        /// <param name="fullname"><summary>Full name of the course</summary></param>
-        /// <param name="shortname"><summary>Shortname of the course</summary></param>
-        /// <param name="category_id"><summary>Category ID of the course</summary></param>
-        /// <param name="idnumber"><summary>Optional //id number</summary></param>
-        /// <param name="summary"><summary>Optional //summary</summary></param>
-        /// <param name="summaryformat"><summary>Default to "1" //summary format (1 = HTML, 0 = MOODLE, 2 = PLAIN or 4 = MARKDOWN)</summary></param>
-        /// <param name="format"><summary>Default to "topics" //course format: weeks, topics, social, site,..</summary></param>
-        /// <param name="showgrades"><summary>Default to "0" //1 if grades are shown, otherwise 0</summary></param>
-        /// <param name="newsitems"><summary>Default to "0" //number of recent items appearing on the course page</summary></param>
-        /// <param name="startdate"><summary>Optional //timestamp when the course start</summary></param>
-        /// <param name="numsections"><summary>Optional //(deprecated, use courseformatoptions) number of weeks/topics</summary></param>
-        /// <param name="maxbytes"><summary>Default to "104857600" //largest size of file that can be uploaded into the course</summary></param>
-        /// <param name="showreports"><summary>Default to "1" //are activity report shown (yes = 1, no =0)</summary></param>
-        /// <param name="visible"><summary>Optional //1: available to student, 0:not available</summary></param>
-        /// <param name="hiddensections"><summary>Optional //(deprecated, use courseformatoptions) How the hidden sections in the course are displayed to students</summary></param>
-        /// <param name="groupmode"><summary>Default to "0" //no group, separate, visible</summary></param>
-        /// <param name="groupmodeforce"><summary>Default to "0" //1: yes, 0: no</summary></param>
-        /// <param name="defaultgroupingid"><summary>Default to "0" //default grouping id</summary></param>
-        /// <param name="enablecompletion"><summary>Optional //Enabled, control via completion and activity settings. Disabled, not shown in activity settings.</summary></param>
-        /// <param name="completenotify"><summary>Optional //1: yes 0: no</summary></param>
-        /// <param name="lang"><summary>//forced course language</summary></param>
-        /// <param name="forcetheme"><summary>Optional //name of the force theme</summary></param>
-        /// <param name="courcCourseformatoption"><summary>Optional //additional options for particular course format list of ( object { name string //course format option name
+        /// <param names="fullname"><summary>Full names of the course</summary></param>
+        /// <param names="shortname"><summary>Shortname of the course</summary></param>
+        /// <param names="category_id"><summary>Category ID of the course</summary></param>
+        /// <param names="idnumber"><summary>Optional //id number</summary></param>
+        /// <param names="summary"><summary>Optional //summary</summary></param>
+        /// <param names="summaryformat"><summary>Default to "1" //summary format (1 = HTML, 0 = MOODLE, 2 = PLAIN or 4 = MARKDOWN)</summary></param>
+        /// <param names="format"><summary>Default to "topics" //course format: weeks, topics, social, site,..</summary></param>
+        /// <param names="showgrades"><summary>Default to "0" //1 if grades are shown, otherwise 0</summary></param>
+        /// <param names="newsitems"><summary>Default to "0" //number of recent items appearing on the course page</summary></param>
+        /// <param names="startdate"><summary>Optional //timestamp when the course start</summary></param>
+        /// <param names="numsections"><summary>Optional //(deprecated, use courseformatoptions) number of weeks/topics</summary></param>
+        /// <param names="maxbytes"><summary>Default to "104857600" //largest size of file that can be uploaded into the course</summary></param>
+        /// <param names="showreports"><summary>Default to "1" //are activity report shown (yes = 1, no =0)</summary></param>
+        /// <param names="visible"><summary>Optional //1: available to student, 0:not available</summary></param>
+        /// <param names="hiddensections"><summary>Optional //(deprecated, use courseformatoptions) How the hidden sections in the course are displayed to students</summary></param>
+        /// <param names="groupmode"><summary>Default to "0" //no group, separate, visible</summary></param>
+        /// <param names="groupmodeforce"><summary>Default to "0" //1: yes, 0: no</summary></param>
+        /// <param names="defaultgroupingid"><summary>Default to "0" //default grouping id</summary></param>
+        /// <param names="enablecompletion"><summary>Optional //Enabled, control via completion and activity settings. Disabled, not shown in activity settings.</summary></param>
+        /// <param names="completenotify"><summary>Optional //1: yes 0: no</summary></param>
+        /// <param names="lang"><summary>//forced course language</summary></param>
+        /// <param names="forcetheme"><summary>Optional //names of the force theme</summary></param>
+        /// <param names="courcCourseformatoption"><summary>Optional //additional options for particular course format list of ( object { names string //course format option names
         ///value string //course format option value } )} )</summary></param>
         /// <returns></returns>
         public static Task<ApiResponse<NewCourse>> CreateCourse(string fullname, string shortname, int category_id,
@@ -1049,9 +1049,9 @@ namespace MoodleApiWrapper
         /// <summary>
         /// Create new courses
         /// </summary>
-        /// <param name="fullname"></param>
-        /// <param name="shortname"></param>
-        /// <param name="category_ids"></param>
+        /// <param names="fullname"></param>
+        /// <param names="shortname"></param>
+        /// <param names="category_ids"></param>
         /// <returns></returns>
         public static Task<ApiResponse<NewCourse>> CreateCourses(string[] fullname, string[] shortname,int[] category_ids)
         {
@@ -1145,9 +1145,9 @@ namespace MoodleApiWrapper
         /// <summary>
         /// Returns grade item details and optionally student grades. 
         /// </summary>
-        /// <param name="criteria_key"></param>
-        /// <param name="criteria_value"></param>
-        /// <param name="addSubCategories"></param>
+        /// <param names="criteria_key"></param>
+        /// <param names="criteria_value"></param>
+        /// <param names="addSubCategories"></param>
         /// <returns></returns>
         public static Task<ApiResponse<Category>> GetGrades(int courseid, string component = "", int activityid = Int32.MaxValue, string[] userids = null)
         {
@@ -1221,14 +1221,80 @@ namespace MoodleApiWrapper
             }
         }
 
+        public static Task<ApiResponse<Events>> CreateCalanderEvents(string[] names, string[] descriptions = default(string[]),
+             int[] formats = default (int[]) , int[] groupids = default(int[]), int[] courseids = default(int[]), int[] repeats = default(int[]),
+             string[] eventtypes = default(string[]), DateTime[] timestarts = default(DateTime[]), TimeSpan[] timedurations = default(TimeSpan[]),
+             int[] visible = default(int[]), int[] sequences = default (int[]))
+        {
+            if (HostIsSet && TokenIsSet)
+            {
+                StringBuilder query = new StringBuilder();
+                query.Append(
+                    "webservice/rest/server.php?" +
+                    $"wstoken={ApiToken}&" +
+                    $"wsfunction={ParseMethod(Methods.core_calendar_create_calendar_events)}&" +
+                    $"moodlewsrestformat={ParseFormat(Format.JSON)}");
+
+                for (int i = 0; i < names.Count(); i++)
+                    query.Append($"&events[{i}][name]={names[i]}");
+
+                if (groupids != null)
+                    for (int i = 0; i < groupids.Count(); i++)
+                        query.Append($"&events[{i}][groupid]={groupids[i]}");
+
+                if (courseids != null)
+                    for (int i = 0; i < courseids.Count(); i++)
+                        query.Append($"&events[{i}][courseid]={courseids[i]}");
+
+                if (descriptions != null)
+                    for (int i = 0; i < descriptions.Count(); i++)
+                        query.Append($"&events[{i}][description]={descriptions[i]}");
+
+                if (formats != null)
+                    for (int i = 0; i < formats.Count(); i++)
+                        query.Append($"&events[{i}][format]={formats[i]}");
+
+                if (repeats != null)
+                    for (int i = 0; i < repeats.Count(); i++)
+                        query.Append($"&events[{i}][repeats]={repeats[i]}");
+
+                if (timestarts != null)
+                    for (int i = 0; i < timestarts.Count(); i++)
+                        query.Append($"&events[{i}][timestart]={DateTimeToUnixTimestamp(timestarts[i])}");
+
+                if (timedurations != null)
+                    for (int i = 0; i < timedurations.Count(); i++)
+                        query.Append($"&events[{i}][timeduration]={timedurations[i].TotalSeconds}");
+
+                if (visible != null)
+                    for (int i = 0; i < visible.Count(); i++)
+                        query.Append($"&events[{i}][visible]={visible[i]}");
+
+                if (sequences != null)
+                    for (int i = 0; i < sequences.Count(); i++)
+                        query.Append($"&events[{i}][sequence]={sequences[i]}");
+                
+                return Get<Events>(Host.AbsoluteUri + query);
+            }
+            else
+            {
+                if (!HostIsSet && TokenIsSet)
+                    throw new Exception("Host & token are not set");
+                else if (!HostIsSet)
+                    throw new Exception("Host is not set");
+                else
+                    throw new Exception("Token is not set");
+            }
+        }
+
         #endregion
 
         #region Getters
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="uri"></param>
+        /// <typeparam names="T"></typeparam>
+        /// <param names="uri"></param>
         /// <returns></returns>
         private static async Task<AuthentiactionResponse<T>> GetAuth<T>(string uri) where T : IDataModel
         {
@@ -1254,8 +1320,8 @@ namespace MoodleApiWrapper
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="uri"></param>
+        /// <typeparam names="T"></typeparam>
+        /// <param names="uri"></param>
         /// <returns></returns>
         private static async Task<ApiResponse<T>> Get<T>(string uri) where T : IDataModel
         {
