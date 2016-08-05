@@ -1183,6 +1183,46 @@ namespace MoodleApiWrapper
 
         #endregion
 
+        #region Calander Actions
+
+        public static Task<ApiResponse<Events>> GetCalanderEvents(int[] groupids = default(int[]), int[] courseids = default(int[]),int[] eventids = default(int[]))
+        {
+            if (HostIsSet && TokenIsSet)
+            {
+                StringBuilder query = new StringBuilder();
+                query.Append(
+                    "webservice/rest/server.php?" +
+                    $"wstoken={ApiToken}&" +
+                    $"wsfunction={ParseMethod(Methods.core_calendar_get_calendar_events)}&" +
+                    $"moodlewsrestformat={ParseFormat(Format.JSON)}");
+
+                if (groupids != null)
+                    for (int i = 0; i < groupids.Count(); i++)                
+                        query.Append($"&events[groupids][{i}]={groupids[i]}");
+
+                if (courseids != null)
+                    for (int i = 0; i < courseids.Count(); i++)                
+                        query.Append($"&events[courseids][{i}]={courseids[i]}");
+                
+                if(eventids != null)
+                    for (int i = 0; i < eventids.Count(); i++)
+                        query.Append($"&events[eventids][{i}]={eventids[i]}");
+                
+            return Get<Events>(Host.AbsoluteUri + query);
+            }
+            else
+            {
+                if (!HostIsSet && TokenIsSet)
+                    throw new Exception("Host & token are not set");
+                else if (!HostIsSet)
+                    throw new Exception("Host is not set");
+                else
+                    throw new Exception("Token is not set");
+            }
+        }
+
+        #endregion
+
         #region Getters
         /// <summary>
         /// 

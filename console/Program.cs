@@ -24,11 +24,9 @@ namespace console
             var token = await ApiWrapper.GetApiToken("tom", "MK3$tpthggguhdwu", "services");
             ApiWrapper.ApiToken = token.Data.token;
           //  var created = await ApiWrapper.CreateUser("tvlll", "AaO", "vdStr", "linden@tom.nl", "zydcp-Q!GA1FdQbmmd");
-             var test = await ApiWrapper.GetCourses();
+             var test = await ApiWrapper.GetCalanderEvents();
 
-            var cource = test.DataArray.First(c => c.fullname.Contains("Engels"));
-            var s = await ApiWrapper.GetGrades(cource.id);
-            test = null;
+             test = null;
         }
     }
 }
