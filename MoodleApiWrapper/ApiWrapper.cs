@@ -1184,7 +1184,13 @@ namespace MoodleApiWrapper
         #endregion
 
         #region Calander Actions
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="groupids"></param>
+        /// <param name="courseids"></param>
+        /// <param name="eventids"></param>
+        /// <returns></returns>
         public static Task<ApiResponse<Events>> GetCalanderEvents(int[] groupids = default(int[]), int[] courseids = default(int[]),int[] eventids = default(int[]))
         {
             if (HostIsSet && TokenIsSet)
@@ -1220,11 +1226,25 @@ namespace MoodleApiWrapper
                     throw new Exception("Token is not set");
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="names"></param>
+        /// <param name="descriptions"></param>
+        /// <param name="formats"></param>
+        /// <param name="groupids"></param>
+        /// <param name="courseids"></param>
+        /// <param name="repeats"></param>
+        /// <param name="eventtypes"></param>
+        /// <param name="timestarts"></param>
+        /// <param name="timedurations"></param>
+        /// <param name="visible"></param>
+        /// <param name="sequences"></param>
+        /// <returns></returns>
         public static Task<ApiResponse<Events>> CreateCalanderEvents(string[] names, string[] descriptions = default(string[]),
-             int[] formats = default (int[]) , int[] groupids = default(int[]), int[] courseids = default(int[]), int[] repeats = default(int[]),
+             int[] formats = default(int[]), int[] groupids = default(int[]), int[] courseids = default(int[]), int[] repeats = default(int[]),
              string[] eventtypes = default(string[]), DateTime[] timestarts = default(DateTime[]), TimeSpan[] timedurations = default(TimeSpan[]),
-             int[] visible = default(int[]), int[] sequences = default (int[]))
+             int[] visible = default(int[]), int[] sequences = default(int[]))
         {
             if (HostIsSet && TokenIsSet)
             {
@@ -1273,6 +1293,49 @@ namespace MoodleApiWrapper
                 if (sequences != null)
                     for (int i = 0; i < sequences.Count(); i++)
                         query.Append($"&events[{i}][sequence]={sequences[i]}");
+
+                return Get<Events>(Host.AbsoluteUri + query);
+            }
+            else
+            {
+                if (!HostIsSet && TokenIsSet)
+                    throw new Exception("Host & token are not set");
+                else if (!HostIsSet)
+                    throw new Exception("Host is not set");
+                else
+                    throw new Exception("Token is not set");
+            }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="eventids"></param>
+        /// <param name="repeats"></param>
+        /// <param name="descriptions"></param>
+        /// <returns></returns>
+        public static Task<ApiResponse<Events>> DeleteCalanderEvents(int[] eventids,int[] repeats, string[] descriptions)
+        {
+            if (HostIsSet && TokenIsSet)
+            {
+                StringBuilder query = new StringBuilder();
+                query.Append(
+                    "webservice/rest/server.php?" +
+                    $"wstoken={ApiToken}&" +
+                    $"wsfunction={ParseMethod(Methods.core_calendar_delete_calendar_events)}&" +
+                    $"moodlewsrestformat={ParseFormat(Format.JSON)}");
+
+                if (repeats != null)
+                    for (int i = 0; i < repeats.Count(); i++)
+                        query.Append($"&events[{i}][repeats]={repeats[i]}");
+
+                if (eventids != null)
+                    for (int i = 0; i < eventids.Count(); i++)
+                        query.Append($"&events[{i}][eventid]={eventids[i]}");
+
+
+                if (descriptions != null)
+                    for (int i = 0; i < descriptions.Count(); i++)
+                        query.Append($"&events[{i}][description]={descriptions[i]}");
                 
                 return Get<Events>(Host.AbsoluteUri + query);
             }
