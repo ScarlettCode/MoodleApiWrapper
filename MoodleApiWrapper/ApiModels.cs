@@ -811,5 +811,4 @@ namespace MoodleApiWrapper
         }
     }
 
-   
 }

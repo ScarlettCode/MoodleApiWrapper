@@ -20,7 +20,7 @@ namespace MoodleApiWrapper
         /// <summary>
         /// field that holds your api token
         /// </summary>
-        private static string _apiToken;
+        private static string _apiToken = "";
 
         /// <summary>
         /// This property sets you Api token.
@@ -1313,7 +1313,7 @@ namespace MoodleApiWrapper
         /// <param name="repeats"></param>
         /// <param name="descriptions"></param>
         /// <returns></returns>
-        public static Task<ApiResponse<Events>> DeleteCalanderEvents(int[] eventids,int[] repeats, string[] descriptions)
+        public static Task<ApiResponse<Events>> DeleteCalanderEvents(int[] eventids,int[] repeats, string[] descriptions = default(string[]))
         {
             if (HostIsSet && TokenIsSet)
             {
@@ -1326,7 +1326,7 @@ namespace MoodleApiWrapper
 
                 if (repeats != null)
                     for (int i = 0; i < repeats.Count(); i++)
-                        query.Append($"&events[{i}][repeats]={repeats[i]}");
+                        query.Append($"&events[{i}][repeat]={repeats[i]}");
 
                 if (eventids != null)
                     for (int i = 0; i < eventids.Count(); i++)
@@ -1350,6 +1350,68 @@ namespace MoodleApiWrapper
             }
         }
 
+        #endregion
+
+        #region Group Actions
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="names"></param>
+        /// <param name="courseids"></param>
+        /// <param name="descriptions"></param>
+        /// <param name="descriptionformats"></param>
+        /// <param name="enrolmentkeys"></param>
+        /// <param name="idnumbers"></param>
+        /// <returns></returns>
+        public static Task<ApiResponse<Group>> CreateGroups(string[] names = default(string[]), int[] courseids = default(int[]), string[] descriptions = default(string[]),
+            int[] descriptionformats = default (int[]), string[] enrolmentkeys = default(string[]),string[] idnumbers = default (string[]))
+        {
+            if (HostIsSet && TokenIsSet)
+            {
+                StringBuilder query = new StringBuilder();
+                query.Append(
+                    "webservice/rest/server.php?" +
+                    $"wstoken={ApiToken}&" +
+                    $"wsfunction=core_group_create_groups&" +
+                    $"moodlewsrestformat={ParseFormat(Format.JSON)}");
+
+                if (names != null)
+                    for (int i = 0; i < names.Count(); i++)
+                        query.Append($"&groups[{i}][name]={names[i]}");
+
+                if (courseids != null)
+                    for (int i = 0; i < courseids.Count(); i++)
+                        query.Append($"&groups[{i}][courseid]={courseids[i]}");
+
+                if (descriptions != null)
+                    for (int i = 0; i < descriptions.Count(); i++)
+                        query.Append($"&groups[{i}][description]={descriptions[i]}");
+
+                if (descriptionformats != null)
+                    for (int i = 0; i < descriptionformats.Count(); i++)
+                        query.Append($"&groups[{i}][descriptionformat]={descriptionformats[i]}");
+
+                if (enrolmentkeys != null)
+                    for (int i = 0; i < enrolmentkeys.Count(); i++)
+                        query.Append($"&groups[{i}][enrolmentkey]={enrolmentkeys[i]}");
+
+                if (idnumbers != null)
+                    for (int i = 0; i < idnumbers.Count(); i++)
+                        query.Append($"&groups[{i}][idnumber]={idnumbers[i]}");
+
+
+                return Get<Events>(Host.AbsoluteUri + query);
+            }
+            else
+            {
+                if (!HostIsSet && TokenIsSet)
+                    throw new Exception("Host & token are not set");
+                else if (!HostIsSet)
+                    throw new Exception("Host is not set");
+                else
+                    throw new Exception("Token is not set");
+            }
+        }
         #endregion
 
         #region Getters
