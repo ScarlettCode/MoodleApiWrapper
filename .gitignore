@@ -245,3 +245,4 @@ ModelManifest.xml
 .fake/
 /MoodleApiWrapper/bin
 /MoodleApiWrapper/obj
+/MoodleApiWrapper.Tests/ConstantsProduction.cs

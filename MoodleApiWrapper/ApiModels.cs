@@ -11,6 +11,41 @@ namespace MoodleApiWrapper
 
     public enum Methods
     {
+        //auth_email
+        auth_email_get_signup_settings,
+        auth_email_signup_user,
+
+        //core_auth
+        core_auth_confirm_user,
+        core_auth_resend_confirmation_email,
+
+        //core_cohort
+        core_cohort_add_cohort_members,
+        core_cohort_create_cohorts,
+        core_cohort_delete_cohort_members,
+        core_cohort_delete_cohorts,
+        core_cohort_get_cohort_members,
+        core_cohort_get_cohorts,
+        core_cohort_search_cohorts,
+        core_cohort_update_cohorts,
+
+        //curso principal
+        core_course_create_categories,
+        core_course_delete_categories,
+        core_course_delete_courses,
+        core_course_delete_modules,
+        core_course_duplicate_course,
+        core_course_import_course,
+
+        //core_enrol
+        core_enrol_get_enrolled_users_with_capability,
+
+        //gradereport_user
+        gradereport_user_get_grades_table,
+
+        //grupo central
+        core_group_create_groups,
+
         core_webservice_get_site_info,
         core_user_get_users,
         core_user_get_users_by_field,
@@ -20,7 +55,7 @@ namespace MoodleApiWrapper
         core_user_delete_users,
         core_role_assign_roles,
         core_role_unassign_roles,
-        //Course Enrollment Actions
+        //Course Enrollment Actions        
         enrol_manual_enrol_users,
         core_group_add_group_members,
         core_group_delete_group_members,
@@ -49,8 +84,8 @@ namespace MoodleApiWrapper
     /// </summary>
     public enum Format
     {
-        JSON,
-        XML
+        json,
+        xml
     }
 
     public class Function : ICloneable

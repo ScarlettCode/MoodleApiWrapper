@@ -1,14 +1,17 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections.Generic;
+using System.Web;
 
 namespace MoodleApiWrapper
 {
     public static class IServiceCollectionExtensions
     {
 
-        public static IServiceCollection AddMoodleService(this IServiceCollection services, Func<Options.Moodle> optionsBuilder)
+        public static IServiceCollection AddMoodleService(this IServiceCollection services, Func<Options.Moodle, Options.Moodle> optionsBuilder)
         {
-            var options = optionsBuilder.Invoke();
+            var options = new Options.Moodle();
+            options = optionsBuilder.Invoke(options);
 
             services.AddMoodleService(options);
 
@@ -23,11 +26,13 @@ namespace MoodleApiWrapper
             if (string.IsNullOrEmpty(options.ApiToken))
                 throw new ArgumentNullException(nameof(options.ApiToken));
 
-            services.AddHttpClient<ApiWrapper,ApiWrapper>(client =>
+            services.AddHttpClient<IMoodleApiClient, MoodleApiClient>(client =>
             {
                 client.BaseAddress = new Uri(options.Host);
             });
             return services;
         }
+
+        
     }
 }
