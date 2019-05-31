@@ -47,7 +47,11 @@ namespace MoodleApiWrapper
         public T Data { get; private set; }
 
         public Error Error { get; private set; }
-    
+
+        public string ResponseText { get; set; }
+
+        public string RequestedPath { get; set; }
+
         internal ApiResponse(ApiResponseRaw rawResponse)
         {
             this.Error = rawResponse.Error.ToObject<Error>();

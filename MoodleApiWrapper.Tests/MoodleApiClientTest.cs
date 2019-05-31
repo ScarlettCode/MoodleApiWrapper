@@ -3,6 +3,8 @@ using System.Net.Http;
 using Xunit;
 using System.Web;
 using System.Collections.Generic;
+using System.Linq;
+using MoodleApiWrapper.Exceptions;
 
 namespace MoodleApiWrapper.Tests
 {
@@ -35,19 +37,13 @@ namespace MoodleApiWrapper.Tests
                 });
                 var target = new MoodleApiClient(client, options);
                 var result = target.GetSiteInfo().Result;
-
+                var functions = result.Data.functions.Select(f => f.name).ToList();
                 Assert.Equal("Administrador", result.Data.firstname);
             }
         }
 
-        public class MyClass
-        {
-            public int Id { get; set; }
-            public string Name { get; set; }
-        }
-
         [Fact]
-        public void GetCoursesTest()
+        public void ExecuteMethod_InvalidParameterException()
         {
             using (var client = new HttpClient())
             {
@@ -58,25 +54,17 @@ namespace MoodleApiWrapper.Tests
                 });
                 var target = new MoodleApiClient(client, options);
 
-                var hola = new MyClass()
-                {
-                    Id = 1,
-                    Name = "hola"
-                };
 
-                var list = new List<MyClass>();
-                list.Add(hola);
-                var hola2 = hola.GetQueryString();
-                var hola3 = list.GetQueryString();
-
-                var result = target.ExecuteMethod<Course>("core_group_get_course_groups");
-                //Assert.NotNull(result.DataArray);
+                //var result = target.ExecuteMethod<Content>("core_course_get_contents", new { courseid = 2 }).Result;
+                Assert.ThrowsAsync<InvalidParameterException>(async () => {
+                    var result = await target.ExecuteMethod<Content>("core_course_get_categories", new { courseid = 2 });
+                });
                 
             }
         }
 
         [Fact]
-        public void GetSignupSettingsTest()
+        public void ExecuteMethod_core_course_get_contents()
         {
             using (var client = new HttpClient())
             {
@@ -86,9 +74,10 @@ namespace MoodleApiWrapper.Tests
                     ApiToken = Constants.API_TOKEN
                 });
                 var target = new MoodleApiClient(client, options);
-                var result = target.GetSignupSettings().Result;
 
-                Assert.Equal("Administrador", result.Data.firstname);
+                
+                    //var result = target.ExecuteMethod<Content>("core_course_get_contents", new { courseid = 2 }).Result;
+                var result = target.ExecuteMethod<Content>("core_course_get_categories", new { courseid = 2 }).Result;
             }
         }
     }

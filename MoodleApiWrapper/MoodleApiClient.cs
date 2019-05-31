@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
+using MoodleApiWrapper.Exceptions;
 using MoodleApiWrapper.Options;
 using Newtonsoft.Json.Linq;
 using System;
@@ -996,7 +997,7 @@ namespace MoodleApiWrapper
 
 
        
-        public Task<ApiResponse<T>> ExecuteMethod<T>(string methodName, Action<StringBuilder> queryBuilder = null) where T : IDataModel
+        public async Task<ApiResponse<T>> ExecuteMethod<T>(string methodName, object parameter) where T : IDataModel
         {
             var query = new StringBuilder();
             query.Append(
@@ -1004,14 +1005,23 @@ namespace MoodleApiWrapper
                 $"wstoken={_options.Value.ApiToken}&" +
                 $"wsfunction={methodName}&" +
                 $"moodlewsrestformat={nameof(Format.json)}");
-            if (queryBuilder != null)
+            if (parameter != null)
             {
                 query.Append("&");
-                queryBuilder(query);
+                query.Append(parameter.ToQueryString());
             }
-
-
-            return getAsync<T>(query.ToString());
+            var apiResponse = await  getAsync<T>(query.ToString());
+            if(apiResponse.Status == "Failed")
+            {
+                switch (apiResponse.Error.errorcode)
+                {
+                    case "invalidparameter":
+                        throw new InvalidParameterException(apiResponse.ResponseText, apiResponse.RequestedPath, apiResponse.Error);
+                    default:
+                        break;
+                }
+            }
+            return apiResponse;
         }
 
 
@@ -1041,18 +1051,22 @@ namespace MoodleApiWrapper
             var response =  await _httpClient.GetAsync(path);
             var result = await response.Content.ReadAsStringAsync();
 
+            ApiResponse<T> rv = null;
             if (result.ToLower() == "null")
                 result = "{IsSuccessful: true,}";
             try
             {
                 var data = JArray.Parse(result);
-                return new ApiResponse<T>(new ApiResponseRaw(data));
+                rv = new ApiResponse<T>(new ApiResponseRaw(data));
             }
             catch (Exception ex)
             {
                 var data = JObject.Parse(result);
-                return new ApiResponse<T>(new ApiResponseRaw(data));
+                rv = new ApiResponse<T>(new ApiResponseRaw(data));
             }
+            rv.RequestedPath = path;
+            rv.ResponseText = result;
+            return rv;
         }
         #endregion
         

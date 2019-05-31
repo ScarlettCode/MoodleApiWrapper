@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MoodleApiWrapper
@@ -44,6 +43,6 @@ namespace MoodleApiWrapper
         /// <param name="methodName">Method name (ex core_group_create_groups)</param>
         /// <param name="queryBuilder">Add parameters to the query (ex query.Append($"&groups[{i}][idnumber]={idnumbers[i]}"))</param>
         /// <returns></returns>
-        Task<ApiResponse<T>> ExecuteMethod<T>(string methodName, Action<StringBuilder> queryBuilder = null) where T : IDataModel;
+        Task<ApiResponse<T>> ExecuteMethod<T>(string methodName, object parameter) where T : IDataModel;
     }
 }

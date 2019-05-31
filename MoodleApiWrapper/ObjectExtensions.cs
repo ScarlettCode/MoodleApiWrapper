@@ -1,31 +1,63 @@
-﻿using System.Collections;
+﻿using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
-using System.Web;
+using System.Net.Http;
 
 namespace System.Web
 {
     public static class ObjectExtensions
     {
-        public static string GetQueryString(this object obj)
+        public static IDictionary<string, string> ToKeyValue(this object metaToken)
         {
-            var result = new List<string>();
-            var props = obj.GetType().GetProperties().Where(p => p.GetValue(obj, null) != null);
-            foreach (var p in props)
+            if (metaToken == null)
             {
-                var value = p.GetValue(obj, null);
-                var enumerable = value as ICollection;
-                if (enumerable != null)
-                {
-                    result.AddRange(from object v in enumerable select string.Format("{0}={1}", p.Name, HttpUtility.UrlEncode(v.ToString())));
-                }
-                else
-                {
-                    result.Add(string.Format("{0}={1}", p.Name, HttpUtility.UrlEncode(value.ToString())));
-                }
+                return null;
             }
 
-            return string.Join("&", result.ToArray());
+            var token = metaToken as JToken;
+            if (token == null)
+            {
+                var jo = JObject.FromObject(metaToken);
+                if(jo != null)
+                    return ToKeyValue(jo);
+            }
+
+            if (token.HasValues)
+            {
+                var contentData = new Dictionary<string, string>();
+                foreach (var child in token.Children().ToList())
+                {
+                    var childContent = child.ToKeyValue();
+                    if (childContent != null)
+                    {
+                        contentData = contentData.Concat(childContent)
+                                                 .ToDictionary(k => k.Key, v => v.Value);
+                    }
+                }
+
+                return contentData;
+            }
+
+            var jValue = token as JValue;
+            if (jValue?.Value == null)
+            {
+                return null;
+            }
+
+            var value = jValue?.Type == JTokenType.Date ?
+                            jValue?.ToString("o", CultureInfo.InvariantCulture) :
+                            jValue?.ToString(CultureInfo.InvariantCulture);
+
+            return new Dictionary<string, string> { { token.Path, value } };
+        }
+
+        public static string ToQueryString(this object obj)
+        {
+            var keyValueContent = obj.ToKeyValue();
+            var formUrlEncodedContent = new FormUrlEncodedContent(keyValueContent);
+            var urlEncodedString = formUrlEncodedContent.ReadAsStringAsync().Result;
+            return urlEncodedString;
         }
     }
 }
