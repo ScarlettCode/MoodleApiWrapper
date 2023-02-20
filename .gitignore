@@ -243,3 +243,6 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+/MoodleApiWrapper/bin
+/MoodleApiWrapper/obj
+/MoodleApiWrapper.Tests/ConstantsProduction.cs

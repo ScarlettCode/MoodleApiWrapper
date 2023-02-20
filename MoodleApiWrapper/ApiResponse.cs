@@ -1,13 +1,11 @@
-﻿using MoodleApiWrapper;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 
 namespace MoodleApiWrapper
 {
- /// <summary>
- /// Repressents the response from authentication
- /// </summary>
- /// <typeparam name="T"></typeparam>
+    /// <summary>
+    /// Repressents the response from authentication
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class AuthentiactionResponse<T> where T : IDataModel
     {
         public T Data { get; private set; }
@@ -49,7 +47,11 @@ namespace MoodleApiWrapper
         public T Data { get; private set; }
 
         public Error Error { get; private set; }
-    
+
+        public string ResponseText { get; set; }
+
+        public string RequestedPath { get; set; }
+
         internal ApiResponse(ApiResponseRaw rawResponse)
         {
             this.Error = rawResponse.Error.ToObject<Error>();

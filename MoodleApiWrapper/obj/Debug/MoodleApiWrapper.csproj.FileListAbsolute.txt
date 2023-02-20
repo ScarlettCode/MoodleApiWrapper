@@ -1,7 +1,0 @@
-C:\Users\Tom van der linden\documents\visual studio 2015\Projects\CastingWithCSharp\MoodleApiWrapper\obj\Debug\MoodleApiWrapper.csprojResolveAssemblyReference.cache
-C:\Users\Tom van der linden\documents\visual studio 2015\Projects\CastingWithCSharp\MoodleApiWrapper\bin\Debug\MoodleApiWrapper.dll
-C:\Users\Tom van der linden\documents\visual studio 2015\Projects\CastingWithCSharp\MoodleApiWrapper\bin\Debug\MoodleApiWrapper.pdb
-C:\Users\Tom van der linden\documents\visual studio 2015\Projects\CastingWithCSharp\MoodleApiWrapper\bin\Debug\Newtonsoft.Json.dll
-C:\Users\Tom van der linden\documents\visual studio 2015\Projects\CastingWithCSharp\MoodleApiWrapper\bin\Debug\Newtonsoft.Json.xml
-C:\Users\Tom van der linden\documents\visual studio 2015\Projects\CastingWithCSharp\MoodleApiWrapper\obj\Debug\MoodleApiWrapper.dll
-C:\Users\Tom van der linden\documents\visual studio 2015\Projects\CastingWithCSharp\MoodleApiWrapper\obj\Debug\MoodleApiWrapper.pdb
